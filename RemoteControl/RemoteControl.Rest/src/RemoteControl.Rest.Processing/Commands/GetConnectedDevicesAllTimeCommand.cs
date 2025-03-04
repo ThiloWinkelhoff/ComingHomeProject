@@ -1,5 +1,5 @@
 ﻿namespace RemoteControl.Rest.Processing.Commands;
 
-internal class GetConnectedDevicesAllTimeCommand
+public class GetConnectedDevicesAllTimeCommand
 {
 }

@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RemoteControl.Rest.Processing.Api.Controller
 {
@@ -12,20 +7,23 @@ namespace RemoteControl.Rest.Processing.Api.Controller
     [Route("Devices")]
     internal class DevicesController : ControllerBase
     {
-        public DevicesController()
+        private IMediator _mediator;
+
+        public DevicesController(IMediator mediator)
         {
+            _mediator = mediator;
         }
 
         [HttpGet(Name = "Skripts")]
         public IEnumerable<string> GetSkripts()
         {
-            return [];
+            return new List<string> { "test1", "test2", "test3" };
         }
 
         [HttpGet(Name = "Mappigs")]
         public IEnumerable<string> GetMappigs()
         {
-            return [];
+            return new List<string> { "test1", "test2", "test3" };
         }
     }
 }

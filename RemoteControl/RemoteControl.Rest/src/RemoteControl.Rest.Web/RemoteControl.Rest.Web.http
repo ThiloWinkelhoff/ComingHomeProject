@@ -1,6 +1,0 @@
-@RemoteControl.Rest.Web_HostAddress = http://localhost:5226
-
-GET {{RemoteControl.Rest.Web_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
