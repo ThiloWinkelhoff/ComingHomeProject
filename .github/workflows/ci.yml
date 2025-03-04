@@ -1,0 +1,112 @@
+name: Build and Test Pipeline
+
+on:
+  # Triggers the workflow on push and pull request events for the main and develop branches
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # Job to build and test the frontend application using Vite and React
+  frontend:
+    name: Build & Test Frontend (Vite + React)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Uses Node.js 18 for compatibility
+
+      - name: Install Dependencies
+        run: |
+          cd RemoteControl/RemoteControl.UI
+          npm install  # Installs all dependencies for the React frontend
+
+      - name: Run Tests
+        run: |
+          cd RemoteControl/RemoteControl.UI
+          npm test  # Runs unit tests to ensure the frontend works as expected
+
+      - name: Build Project
+        run: |
+          cd RemoteControl/RemoteControl.UI
+          npm run build  # Builds the frontend for production
+
+      - name: Move Frontend artifacts to Backend wwwroot
+        run: |
+          rm -rf RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot  
+          mkdir -p RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot  
+          cp -r RemoteControl/RemoteControl.UI/dist/* RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot/  # Copy new build files
+
+  # Job to build and test the backend REST API using ASP.NET Core
+  backend:
+    name: Build & Test Backend (ASP.NET Core)
+    runs-on: ubuntu-latest
+    needs: frontend # Ensures the frontend build completes before running backend steps
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0" # Specifies the .NET version to use
+
+      - name: Restore Dependencies
+        run: |
+          cd RemoteControl/RemoteControl.Rest/src
+          dotnet restore  # Restores NuGet packages required for the project
+
+      - name: Build Project
+        run: |
+          cd RemoteControl\RemoteControl.Rest\RemoteControl.Rest\src\RemoteControl.Rest.Web
+          dotnet build --configuration Release --no-restore
+
+      - name: Run Tests
+        run: |
+          cd RemoteControl\RemoteControl.Rest\RemoteControl.Rest\src\RemoteControl.Rest.Web
+          dotnet test --no-restore --verbosity normal
+
+      - name: Publish Backend (Includes Frontend)
+        run: |
+          cd RemoteControl\RemoteControl.Rest\RemoteControl.Rest\src\RemoteControl.Rest.Web
+          dotnet publish -c Release -o ../../published-backend
+
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-published # Names the artifact for later retrieval
+          path: published-backend/ # Defines the artifact's storage path
+
+  # Job to package and upload the Python project
+  python:
+    name: Package Python Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Retrieves the repository contents
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" # Specifies Python version to use
+
+      - name: Install Dependencies
+        run: |
+          cd python_project
+          pip install -r requirements.txt
+
+      - name: Package Python Project
+        run: |
+          mkdir -p published-python
+          cp -r python_project/* published-python/
+
+      - name: Upload Python Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-published # Names the uploaded artifact
+          path: published-python/ # Defines the storage path for the artifact
