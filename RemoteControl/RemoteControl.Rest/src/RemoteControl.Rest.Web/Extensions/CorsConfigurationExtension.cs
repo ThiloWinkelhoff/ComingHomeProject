@@ -81,7 +81,7 @@ public static class CorsConfigurationExtension
     ///     The name of the <c>CORS</c> policy that will be applied to
     ///     the application.
     /// </param>
-    internal static void ApplyCors(this IApplicationBuilder app, string policyName)
+    internal static void ApplyCors(this IApplicationBuilder app, string policyName, ILogger logger)
     {
         app.UseCors(policyName);
     }

@@ -1,4 +1,5 @@
-﻿using RemoteControl.Rest.Web.Extensions;
+﻿using Microsoft.Extensions.FileProviders;
+using RemoteControl.Rest.Web.Extensions;
 
 namespace RemoteControl.Rest.Web;
 
@@ -77,17 +78,14 @@ public class Startup
     ///     <see cref="IApplicationBuilder" /> that is to be
     ///     configured.
     /// </param>
-    /// <param name="environment">
-    ///     <inheritdoc cref="IWebHostEnvironment" path="/summary" />
-    /// </param>
-    /// <param name="loggerFactory">The logger factory to create loggers.</param>
-    public void Configure(IApplicationBuilder appBuilder, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+    public void Configure(IApplicationBuilder appBuilder, ILoggerFactory loggerFactory)
     {
+        ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
         if (_env.IsDevelopment())
         {
             // Enable Swagger and Swagger UI for development environment.
             appBuilder.UseDeveloperExceptionPage();
-            appBuilder.ApplySwagger(loggerFactory);
+            appBuilder.ApplySwagger(logger);
         }
         else
         {
@@ -95,11 +93,34 @@ public class Startup
             appBuilder.UseHsts();
         }
 
-        appBuilder.ApplyCors(_policy);
+        List<PhysicalFileProvider> fileProviders = new();
+
+        foreach (string entry in (_configuration.GetValue<string>("wwwroot") ?? "wwwroot").Split('&'))
+        {
+            string wwwroot = Path.IsPathFullyQualified(entry)
+                ? entry
+                : Path.Combine(_env.ContentRootPath,
+                    entry);
+
+            try
+            {
+                fileProviders.Add(new PhysicalFileProvider(wwwroot));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                logger.LogWarning("The specified directory for wwwroot '{Path}' could not be found",
+                    wwwroot);
+            }
+        }
+
+        appBuilder.ApplyCors(_policy,
+            logger);
+
+
         appBuilder.UseRouting();
 
         // Serve static files from wwwroot
-        appBuilder.UseStaticFiles();
+        appBuilder.UseStaticFiles(new StaticFileOptions { FileProvider = new CompositeFileProvider(fileProviders) });
         appBuilder.UseDefaultFiles();
 
         // Authentication and Authorization

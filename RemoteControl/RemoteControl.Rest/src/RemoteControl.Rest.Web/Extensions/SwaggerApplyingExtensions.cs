@@ -13,15 +13,13 @@ internal static class SwaggerApplyingExtensions
     ///     The <see cref="IApplicationBuilder" /> used to configure middleware in the
     ///     HTTP request pipeline.
     /// </param>
-    /// <param name="loggerFactory">
-    ///     The <see cref="ILoggerFactory" /> for creating loggers, used for logging
-    ///     Swagger-related information during startup.
+    /// <param name="logger">
+    ///     The <see cref="ILogger" /> for logging.
     /// </param>
-    internal static void ApplySwagger(this IApplicationBuilder app, ILoggerFactory loggerFactory)
+    internal static void ApplySwagger(this IApplicationBuilder app, ILogger logger)
     {
-        ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
         var swagger = "/swagger/v1/swagger.json";
-
+        var swaggerRoute = "swagger";
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
@@ -30,6 +28,6 @@ internal static class SwaggerApplyingExtensions
             options.RoutePrefix = "swagger"; // Serve Swagger at `/swagger`
         });
 
-        logger.LogInformation("Swagger is used and may be accessed through /swagger");
+        logger.LogInformation($"Swagger is used and may be accessed through /{swaggerRoute}");
     }
 }
