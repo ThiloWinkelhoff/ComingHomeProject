@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace RemoteControl.Rest.Web;
+namespace RemoteControl.Rest.Web.Extensions;
 
 /// <summary>
 ///     Extension for logging options in regard to

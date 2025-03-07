@@ -1,5 +1,6 @@
 using NLog;
 using NLog.Extensions.Logging;
+using RemoteControl.Rest.Web.Extensions;
 
 namespace RemoteControl.Rest.Web;
 

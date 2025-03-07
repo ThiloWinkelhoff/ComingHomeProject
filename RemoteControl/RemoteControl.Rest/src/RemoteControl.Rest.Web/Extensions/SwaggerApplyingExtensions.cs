@@ -1,4 +1,4 @@
-﻿namespace RemoteControl.Rest.Web;
+﻿namespace RemoteControl.Rest.Web.Extensions;
 
 /// <summary>
 ///     Extension to apply Swagger.
@@ -26,7 +26,7 @@ internal static class SwaggerApplyingExtensions
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint(swagger,
-                "ISG Workplace Dashboard API");
+                "Remote Control Rest API SWAGGER");
             options.RoutePrefix = "swagger"; // Serve Swagger at `/swagger`
         });
 

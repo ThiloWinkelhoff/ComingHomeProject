@@ -1,4 +1,6 @@
-﻿namespace RemoteControl.Rest.Web;
+﻿using RemoteControl.Rest.Web.Extensions;
+
+namespace RemoteControl.Rest.Web;
 
 /// <summary>
 ///     Startup configuring the startup of a project, specified on

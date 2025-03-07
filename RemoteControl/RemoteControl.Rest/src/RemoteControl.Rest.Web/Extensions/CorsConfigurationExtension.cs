@@ -1,4 +1,4 @@
-﻿namespace RemoteControl.Rest.Web;
+﻿namespace RemoteControl.Rest.Web.Extensions;
 
 public static class CorsConfigurationExtension
 {

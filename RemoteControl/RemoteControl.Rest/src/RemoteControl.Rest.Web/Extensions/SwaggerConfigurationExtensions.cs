@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace RemoteControl.Rest.Web;
+namespace RemoteControl.Rest.Web.Extensions;
 
 /// <summary>
 ///     Provides configuration options for <c>Swagger</c> to document and interact
@@ -28,18 +28,17 @@ internal static class SwaggerConfigurationExtensions
             options.SwaggerDoc("v1",
                 new OpenApiInfo
                 {
-                    Title = "ISG Workplace Dashboard",
+                    Title = "RemoteControl Rest API",
                     Version = "v1",
                     Description =
-                        "This API allows the management of work-spaces within the Kaase buildings at IMA Schelling." +
-                        "Currently it can read work-space information and their reservations.",
+                        "This API manages the remote access to controlling Properties of the Coming Home Project.",
                     License = new OpenApiLicense
                     {
-                        Name = "IMA Schelling"
+                        Name = "MOGUS GmBh"
                     },
                     Contact = new OpenApiContact
                     {
-                        Email = "Lukas.Labudde@imaschelling.com",
+                        Email = "LukasLabudde1+PropjectWork@gmail.com",
                         Name = "API Support"
                     }
                 });
@@ -48,7 +47,7 @@ internal static class SwaggerConfigurationExtensions
             // Automatically takes summaries of directly accessed methods and
             // classes.
             string filePath = Path.Combine(AppContext.BaseDirectory,
-                "Isg.Workplace.Dashboard.Processing.API.xml");
+                "RemoteControl.Rest.Web.xml");
             options.IncludeXmlComments(filePath);
         });
     }

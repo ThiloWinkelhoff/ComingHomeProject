@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using RemoteControl.Rest.Processing.Commands;
 
-namespace RemoteControl.Rest.Web;
+namespace RemoteControl.Rest.Web.Extensions;
 
 /// <summary>
 ///     Extensions for <see cref="MediatR" /> configuration.
