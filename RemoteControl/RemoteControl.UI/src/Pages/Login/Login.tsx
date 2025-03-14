@@ -13,7 +13,7 @@ function Login() {
   return (
     <>
       <div
-        className="HomeContainer"
+        className="LoginContainer"
         style={{
           display: "flex",
           flexDirection: "column",

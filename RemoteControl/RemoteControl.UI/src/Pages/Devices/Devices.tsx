@@ -1,7 +1,7 @@
 function Devices() {
   return (
     <>
-      <div className="HomeContainer">
+      <div className="DevicesContainer">
         <h1>Devices</h1>
       </div>
     </>

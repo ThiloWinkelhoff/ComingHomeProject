@@ -12,18 +12,3 @@
   width: 100%;
   display: flex;
 }
-
-/* Media queries for responsiveness */
-@media (max-width: 768px) {
-  .Sidebar {
-    width: 60px; /* Collapsed sidebar */
-  }
-
-  .contentContainer {
-    margin-left: 0; /* Full width content */
-  }
-
-  .Sidebar ul li {
-    display: none; /* Hide links in smaller screens */
-  }
-}

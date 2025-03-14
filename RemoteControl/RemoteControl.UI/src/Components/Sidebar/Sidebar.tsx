@@ -1,19 +1,10 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import "./Sidebar.css"; // Assuming you'll create a corresponding Sidebar CSS file
-
+import gearicon from "../../assets/GearIcon.svg";
 const Sidebar = () => {
   return (
-    <div
-      className="Sidebar"
-      style={{
-        height: "100%",
-        width: "20%",
-        backgroundColor: "#333",
-        color: "white",
-        padding: "20px",
-      }}
-    >
+    <div className="Sidebar">
+      <img src={gearicon}></img>
       <ul>
         <li>
           <Link to="/home">Home</Link>
@@ -26,6 +17,9 @@ const Sidebar = () => {
         </li>
         <li>
           <Link to="/scripts">Scripts</Link>
+        </li>
+        <li>
+          <Link to="/login">Login</Link>
         </li>
       </ul>
     </div>

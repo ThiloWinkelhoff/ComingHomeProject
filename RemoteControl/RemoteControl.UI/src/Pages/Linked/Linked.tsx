@@ -1,7 +1,7 @@
 function Linked() {
   return (
     <>
-      <div className="HomeContainer">
+      <div className="LinkedContainer">
         <h1>Linked</h1>
       </div>
     </>

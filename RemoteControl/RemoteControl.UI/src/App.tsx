@@ -1,5 +1,4 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom"; // Use Routes and Route here, but no BrowserRouter
 import "./App.css";
 import Home from "./Pages/Home/Home";
 import Login from "./Pages/Login/Login";
@@ -24,6 +23,7 @@ function App() {
           <Route path="/devices" element={<Devices />} />
           <Route path="/scripts" element={<Scripts />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </div>
