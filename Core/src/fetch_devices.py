@@ -3,7 +3,7 @@ from fritzconnection.lib.fritzhosts import FritzHosts
 
 def get_connected_devices():
     """Fetch the list of currently connected devices."""
-    with open('secrets.json') as f:
+    with open('../secrets.json') as f:
         secrets = json.load(f)
 
     fritz_host = secrets['fritz_host']

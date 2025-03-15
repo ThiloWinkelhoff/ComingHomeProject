@@ -3,14 +3,18 @@ import os
 import subprocess
 from fetch_devices import get_connected_devices
 
-CONNECTED_DEVICES_FILE = "connected_devices.json"
+# Get the absolute path to the connected_devices.json file in the core directory
+CONNECTED_DEVICES_FILE = os.path.join(os.path.dirname(__file__), "..", "connected_devices.json")
+CONNECTED_DEVICES_FILE = os.path.abspath(CONNECTED_DEVICES_FILE)  # Normalize path
 
 def load_known_devices():
-    """Load previously known devices from file."""
-    if os.path.exists(CONNECTED_DEVICES_FILE):
-        with open(CONNECTED_DEVICES_FILE, "r") as f:
-            return json.load(f)
-    return []
+    filename = "../connected_devices.json"  # Ensure the correct path
+    with open(filename, "r", encoding="utf-8") as f:
+        content = f.read().strip()
+        if not content:
+            raise ValueError("JSON file is empty!")
+        return json.loads(content)
+
 
 def save_known_devices(devices):
     """Save the current devices to file."""
