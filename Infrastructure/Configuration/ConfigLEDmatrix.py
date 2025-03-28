@@ -8,7 +8,7 @@ from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
 
-def InitializeMatrix():
+def initialize_device():
     serial = spi(port=0, device=0, gpio=noop())
     return max7219(serial, cascaded=n, block_orientation=block_orientation, 
                      rotate=rotate or 0, blocks_arranged_in_reverse_order=inreverse)
@@ -33,5 +33,18 @@ def vertical_scroll(device, words):
         virtual.set_position((0,i))
         time.sleep(0.05)
 
+def demo(n, block_orientation, rotate, inreverse):
+    device = initialize_device(n, block_orientation, rotate, inreverse)
+    print("Created Device")
+
+    display_text(device, "MAX7219 LED MATRIX Demo")
+
+    vertical_scroll(device, ["Victor", "Echo", "Rome", "Tango", "India"])
+
 if __name__ == "__main__":
-    parser= arg
+    parser= argparse.ArgumentParser(description='matrix_configuration arguments')
+    parser.add_argument('--cascaded', '-n', type=int, default=1, help='Number of cascaded MAX7219 LED matrices')
+    parser.add_argument('--block-orientation', type=int, default=0, choices=[0,90,-90] help='Corrects block orientation when wired vertically')
+    parser.add_argument('--rotate', type=int, default=0, choices=[0,1,2,3], help='Rotate display 0=0°, 1=90°, 2=180°, 3=270°')
+
+    args = parser.parse_args()
