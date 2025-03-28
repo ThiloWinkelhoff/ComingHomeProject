@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
-using RemoteControl.Rest.Processing.Api.config;
 
 namespace RemoteControl.Rest.Processing.Api.Controller;
 
@@ -12,10 +11,15 @@ namespace RemoteControl.Rest.Processing.Api.Controller;
 [ApiExplorerSettings(IgnoreApi = true)]
 public class UiController : ControllerBase
 {
-    private static readonly string[] DefaultFiles = { "default.htm", "default.html", "index.htm", "index.html" };
-    private readonly IConfiguration _configuration;
-
+    /// <summary>
+    ///     <inheritdoc cref="FileExtensionContentTypeProvider" path="/summary" />
+    /// </summary>
     private readonly FileExtensionContentTypeProvider _contentTypeProvider = new();
+
+    /// <summary>
+    ///     Path to the UI entry point.
+    /// </summary>
+    private readonly string _indexFile;
 
     /// <summary>
     ///     Constructs an instance of <see cref="UiController" />.
@@ -23,51 +27,53 @@ public class UiController : ControllerBase
     /// <param name="configuration">The raw application configuration.</param>
     public UiController(IConfiguration configuration)
     {
-        _configuration = configuration;
+        // Sets the path to the Index file of the UI Project
+        _indexFile = Path.Combine(configuration.GetSection("wwwroot").Value ?? "wwwroot",
+            "index.html");
     }
 
     /// <summary>
-    ///     Serves UI resources based on the requested path.
-    ///     If no path is provided, it attempts to return the default UI entry point.
-    ///     The method searches for files in either the configured <c>wwwroot</c>
-    ///     directory
-    ///     or the default <c>web-client-planning</c> directory.
+    ///     Serves the UI from the <c>index.html</c>.
+    ///     In case assets or other files are requested refer to the
+    ///     <c>UseStaticFiles</c> in the <c>Startup</c> which handles these requests.
     /// </summary>
     /// <param name="catchAll">
-    ///     The requested file path. If <c>null</c> or empty, the method returns the
-    ///     default UI entry file.
+    ///     The requested path in the UI.
     /// </param>
     /// <param name="cancellationToken">
     ///     Token to handle request cancellation.
     /// </param>
     /// <returns>
-    ///     Returns the requested file content if found. If the file does not exist,
-    ///     returns a <see cref="NotFoundResult" />.
+    ///     Returns the requested UI path, in case the UI has been configured wrong, a
+    ///     <see cref="NotFoundResult" /> will be returned.
     /// </returns>
-    [
-        HttpGet("/{**catchAll}")
-    ]
+    [HttpGet("/{**catchAll}")]
+    [ProducesResponseType(typeof(byte[]),
+        200)] // Success, file content
+    [ProducesResponseType(404)] // Not Found if file doesn't exist
+    [ProducesResponseType(500)] // Internal Server Error in case of I/O issues
     public async Task<IActionResult> GetPageAsync(string catchAll, CancellationToken cancellationToken = default)
     {
-        // Sets the UI path to either the provided section in the configuration or selects the default web-client-planning.
-        string wwwroot = _configuration.GetSection("wwwroot").Value ?? "web-client-planning";
-
-        // Select the UI Entry-Point.
-        var path = $"{wwwroot}/index.htm";
-
-        // Checks if the Entry-Point Exists.
-        if (System.IO.File.Exists(path))
+        // Check if the entry point of the UI exists.
+        if (!System.IO.File.Exists(_indexFile))
         {
-            // Reads the content that was requested with the catchAll.
-            string file = await System.IO.File.ReadAllTextAsync(path,
-                cancellationToken);
-
-            // Returns the value.
-            return Content(file,
-                MimeTypes.Text.Html);
+            return NotFound();
         }
 
+        // Tries to get the type of the requested file.
+        if (!_contentTypeProvider.TryGetContentType(_indexFile,
+                out string contentType))
+        {
+            // Default content type
+            contentType = "application/octet-stream";
+        }
 
-        return NotFound();
+        // Reads the Index.html
+        byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(_indexFile,
+            cancellationToken);
+
+        // Returns the Index File
+        return File(fileBytes,
+            contentType);
     }
 }

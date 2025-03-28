@@ -10,17 +10,17 @@ public class Program
     {
         Logger? logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 
-        logger.Info("Initializing application");
+        logger.Info("Initialization: Starting");
 
         // Create and build the host
         IHost host = CreateHostBuilder(args).Build();
 
         // Logs the completion of the initialisation
-        logger.Info("Application initialization complete. Starting to serve requests.");
+        logger.Info("Initialization: Complete. Starting to serve requests.");
 
         // Retrieves the Environment
         var env = host.Services.GetRequiredService<IHostEnvironment>();
-        logger.Info($"Running in {env.EnvironmentName} environment");
+        logger.Info($"Initialisation: Running in {env.EnvironmentName} environment");
 
         // Log Kestrel endpoints
         var configuration = host.Services.GetRequiredService<IConfiguration>();
@@ -41,6 +41,7 @@ public class Program
             {
                 IHostEnvironment env = context.HostingEnvironment;
 
+                #if DEBUG
                 // Load configuration from appsettings.json
                 config.AddJsonFile("appsettings.json",
                         false,
@@ -56,6 +57,19 @@ public class Program
                     // This line enables loading secrets during development
                     config.AddUserSecrets<Startup>();
                 }
+
+                #else
+                // Load configuration from appsettings.json
+                config.AddJsonFile("appsettings.json",
+                        false,
+                        true)
+
+                    // Load environment-specific config file based on current environment
+                    .AddJsonFile("appsettings.Production.json",
+                        true,
+                        true);
+                #endif
+
 
                 config.AddEnvironmentVariables();
             })

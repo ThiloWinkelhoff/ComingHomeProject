@@ -34,27 +34,37 @@ public static class CorsConfigurationExtension
     /// </exception>
     public static void ConfigureCors(this IServiceCollection services,
         IConfiguration configuration,
-        IWebHostEnvironment environment, string policyName)
+        IWebHostEnvironment environment, string policyName, ILogger logger)
     {
         // Retrieves the CORS origin options from the configuration.
-        string[]? origins = configuration.GetSection(CorsOriginSectionName).Get<string[]>();
+        List<string>? origins = configuration.GetSection(CorsOriginSectionName).Get<string[]>()?.ToList();
 
         // If no origins are configured, exit early to avoid unnecessary CORS setup.
         if (origins is null ||
-            origins.Length == 0)
+            origins.Count == 0)
         {
+            logger.LogWarning("CORS: No Origins were defined");
             return;
         }
 
+        logger.LogInformation("CORS: Allowed CORS Origins: {origins}",
+            origins);
+
         // Validate that a wildcard origin ("*") is only allowed in development environments.
-        if (origins.Any(origin => string.Equals(origin,
-                "*",
-                StringComparison.Ordinal)) &&
-            !environment.IsDevelopment())
+        foreach (string origin in origins)
         {
-            throw new InvalidOperationException(
-                @$"Setting {CorsOriginSectionName} to ""*"" is only allowed in development environment.");
+            if (string.Equals(origin,
+                    "*",
+                    StringComparison.Ordinal) &&
+                !environment.IsDevelopment())
+            {
+                logger.LogInformation(
+                    """CORS: Origin {origin} contains "*" which is only allowed in an development environment.""",
+                    origin);
+                origins.Remove(origin);
+            }
         }
+
 
         // Adds CORS services with the specified policy, allowing any method and any header.
         services.AddCors(options =>
@@ -62,7 +72,7 @@ public static class CorsConfigurationExtension
             options.AddPolicy(policyName,
                 builder =>
                     builder
-                        .WithOrigins(origins)
+                        .WithOrigins(origins.ToArray())
                         .AllowAnyMethod()
                         .AllowAnyHeader()
             );
@@ -83,6 +93,8 @@ public static class CorsConfigurationExtension
     /// </param>
     internal static void ApplyCors(this IApplicationBuilder app, string policyName, ILogger logger)
     {
+        logger.LogInformation("CORS: Policy {policyName} has been applied",
+            policyName);
         app.UseCors(policyName);
     }
 }
