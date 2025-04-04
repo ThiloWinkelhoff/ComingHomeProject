@@ -1,5 +1,5 @@
 import time
-import device_monitor
+import ClientArrivedEvent
 import ConfigRouter
 
 if __name__ == "__main__":
@@ -12,7 +12,7 @@ if __name__ == "__main__":
         for connectedDevice in connectedDevices:
             if not(session_devices.__contains__(connectedDevice)):
                 if known_devices.__contains__(connectDevice):
-                    #invoke ClientArrivedEvent()
+                    ClientArrivedEvent.handle_client_arrival()
                     print("invoke ClientArrivedEvent")
                 session_devices.__add__(connectedDevice)
         time.sleep(10000)
