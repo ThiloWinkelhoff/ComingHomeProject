@@ -1,0 +1,19 @@
+﻿{
+  "profiles": {
+    "EnvProd": {
+      "commandName": "Project",
+      "externalUrlConfiguration": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "EnvDev": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "externalUrlConfiguration": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
