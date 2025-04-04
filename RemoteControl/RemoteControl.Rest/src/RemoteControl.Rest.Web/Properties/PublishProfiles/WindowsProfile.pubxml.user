@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Schule\Jahr 2\EVP_Huss\ProjektArbeit\RemoteControl\RemoteControl.Rest\src\RemoteControl.Rest.Web\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2025-03-16T16:13:08.6315803Z||;True|2025-03-14T12:25:59.3648256+01:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

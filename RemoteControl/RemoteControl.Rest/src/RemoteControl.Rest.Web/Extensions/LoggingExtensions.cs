@@ -20,7 +20,7 @@ internal static class LoggingExtensions
 
         if (!kestrelEndpoints.Exists())
         {
-            logger.Warn("No Kestrel endpoints are configured.");
+            logger.Warn("Endpoint: No Kestrel endpoints are configured.");
             return;
         }
 
@@ -28,7 +28,7 @@ internal static class LoggingExtensions
         {
             string name = endpoint.Key;
             var url = endpoint.GetValue<string>("Url");
-            logger.Info($"Configured Kestrel Endpoint - Name: {name}, URL: {url}");
+            logger.Info($"Endpoint: Configured Kestrel Endpoint - Name: {name}, URL: {url}");
         }
     }
 }

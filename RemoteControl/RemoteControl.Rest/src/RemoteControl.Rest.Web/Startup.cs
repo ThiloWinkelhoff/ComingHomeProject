@@ -47,6 +47,16 @@ public class Startup
     /// <param name="services"><see cref="IServiceCollection" /> that is to be edited.</param>
     public void ConfigureServices(IServiceCollection services)
     {
+        // Adds Logging from NLog (or any configured provider).
+        services.AddLogging();
+
+        // Create a logger instance
+        using ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+        var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
+
+        logger.LogInformation("Startup: Configuring services...");
+
         // Adds Logging from NLog.
         services.AddLogging();
 
@@ -63,12 +73,15 @@ public class Startup
         // Adding MediatR configuration
         services.ConfigureMediatR();
 
+        #if DEBUG
         // Adding Swagger Documentation to the application.
         services.AddSwaggerConfiguration();
+        #endif
 
         services.ConfigureCors(_configuration,
             _env,
-            _policy);
+            _policy,
+            logger);
     }
 
     /// <summary>
@@ -81,17 +94,12 @@ public class Startup
     public void Configure(IApplicationBuilder appBuilder, ILoggerFactory loggerFactory)
     {
         ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
-        if (_env.IsDevelopment())
-        {
-            // Enable Swagger and Swagger UI for development environment.
-            appBuilder.UseDeveloperExceptionPage();
-            appBuilder.ApplySwagger(logger);
-        }
-        else
-        {
-            // Force HTTPS in production.
-            appBuilder.UseHsts();
-        }
+
+        #if DEBUG
+        // Enable Swagger and Swagger UI for development environment.
+        appBuilder.UseDeveloperExceptionPage();
+        appBuilder.ApplySwagger(logger);
+        #endif
 
         List<PhysicalFileProvider> fileProviders = new();
 
@@ -108,7 +116,7 @@ public class Startup
             }
             catch (DirectoryNotFoundException)
             {
-                logger.LogWarning("The specified directory for wwwroot '{Path}' could not be found",
+                logger.LogWarning("UI: The specified directory for wwwroot '{Path}' could not be found",
                     wwwroot);
             }
         }
@@ -116,7 +124,7 @@ public class Startup
         appBuilder.ApplyCors(_policy,
             logger);
 
-
+        appBuilder.UseFileServer();
         appBuilder.UseRouting();
 
         // Serve static files from wwwroot

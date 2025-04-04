@@ -28,6 +28,6 @@ internal static class SwaggerApplyingExtensions
             options.RoutePrefix = "swagger"; // Serve Swagger at `/swagger`
         });
 
-        logger.LogInformation($"Swagger is used and may be accessed through /{swaggerRoute}");
+        logger.LogInformation($"Swagger: Accessible through /{swaggerRoute}");
     }
 }

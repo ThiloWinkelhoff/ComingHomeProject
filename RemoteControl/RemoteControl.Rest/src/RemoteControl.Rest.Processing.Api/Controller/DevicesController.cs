@@ -14,14 +14,32 @@ public class DevicesController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("skripts")]
-    public IEnumerable<string> GetSkripts()
+    [HttpGet]
+    public IEnumerable<string> GerAllDevices()
     {
         return new List<string> { "test1", "test2", "test3" };
     }
 
-    [HttpGet("mappings")] // Unique route
-    public IEnumerable<string> GetMappigs()
+    [HttpGet("connected")]
+    public IEnumerable<string> GetConnectedDevices()
+    {
+        return new List<string> { "test1", "test2", "test3" };
+    }
+
+    [HttpGet("disconnected")]
+    public IEnumerable<string> GetDisconnectedDevices()
+    {
+        return new List<string> { "test1", "test2", "test3" };
+    }
+
+    [HttpGet("{deviceID}/get-connected-scripts")]
+    public IEnumerable<string> GetConnectedScripts()
+    {
+        return new List<string> { "test1", "test2", "test3" };
+    }
+
+    [HttpGet("{deviceID}/get-unconnected-scripts")]
+    public IEnumerable<string> GetUnconnectedScripts()
     {
         return new List<string> { "test1", "test2", "test3" };
     }
