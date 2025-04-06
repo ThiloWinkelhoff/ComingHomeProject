@@ -9,7 +9,7 @@ class Device:
     scripts: List[str]
 
 if __name__ == "__main__":
-    known_devices = "" #hier müssen die devices aus der json rein
+    known_devices = "" ;#hier müssen die devices aus der json rein
     fh = ConfigRouter.configure_Router()
     session_devices = ConfigRouter.get_session_devices(fh)
 

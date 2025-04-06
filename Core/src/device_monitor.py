@@ -1,15 +1,38 @@
 import json
 import os
+from FritzBoxConnection import fetch_connected_devices
 import subprocess
-from fetch_devices import get_connected_devices
 
-# Get the absolute path to the connected_devices.json file in the core directory
-CONNECTED_DEVICES_FILE = os.path.join(os.path.dirname(__file__), "..", "connected_devices.json")
-CONNECTED_DEVICES_FILE = os.path.abspath(CONNECTED_DEVICES_FILE)  # Normalize path
+KnownDevices = os.getcwd() + "/devices.json"
+
+class Device:
+    def __init__(self, name, ip, mac, connected=False, scripts=None):
+        self.name = name
+        self.ip = ip
+        self.mac = mac
+        self.scripts = scripts if scripts is not None else []
+        self.connected = connected  
+
+    def add_script(self, script):
+        self.scripts.append(script)
+
+    def to_dict(self):
+        """Convert the Device object to a dictionary."""
+        return {
+            'name': self.name,
+            'ip': self.ip,
+            'mac': self.mac,
+            'scripts': self.scripts,
+            'connected': self.connected
+        }
+
+    def __str__(self):
+        return f"Device(name={self.name}, ip={self.ip}, mac={self.mac}, scripts={self.scripts}, connected={self.connected})"
+
 
 def load_known_devices():
-    filename = "../connected_devices.json"  # Ensure the correct path
-    with open(filename, "r", encoding="utf-8") as f:
+    """Load the list of previously known devices."""
+    with open(KnownDevices, "r", encoding="utf-8") as f:
         content = f.read().strip()
         if not content:
             raise ValueError("JSON file is empty!")
@@ -18,37 +41,92 @@ def load_known_devices():
 
 def save_known_devices(devices):
     """Save the current devices to file."""
-    with open(CONNECTED_DEVICES_FILE, "w") as f:
-        json.dump(devices, f, indent=4)
+    devices_dict = [device.to_dict() for device in devices]
+    with open('devices.json', 'w') as json_file:
+        json.dump(devices_dict, json_file, indent=4)
+
+
 
 def detect_changes():
     """Detect newly connected and disconnected devices."""
-    current_devices = get_connected_devices()
-    known_devices = load_known_devices()
+    fetched_devic = fetch_connected_devices()
 
-    # Extract MAC addresses
-    known_macs = {device["mac"] for device in known_devices}
-    current_macs = {device["mac"] for device in current_devices}
+    known_devic = load_known_devices()  # Load known devices from the file
 
-    # Find new and disconnected devices
-    new_devices = [device for device in current_devices if device["mac"] not in known_macs]
-    disconnected_devices = [device for device in known_devices if device["mac"] not in current_macs]
+    # Create a set of MAC addresses for easy comparison
+    known_devices = {device['mac']: Device(device['name'], device['ip'], device['mac'], device['connected'], device.get('scripts', [])) for device in known_devic}
 
-    # Update the stored device list
-    save_known_devices(current_devices)
+    # Create a dictionary of current devices by MAC address for easy lookup
+    fetched_devices = {device['mac']: Device(device['name'], device['ip'], device['mac']) for device in fetched_devic}
 
-    return new_devices, disconnected_devices
+    # Track newly connected, disconnected, and reconnected devices
+    new_devices = []
+    disconnected_devices = []
+    connected_devices = []
+    devices = []
+    counter = 0
+
+    for known_device in known_devices.values():
+        counter = counter+1
+        print(f"Known Device: {counter}")
+        mac = known_device.mac
+        if mac in fetched_devices and not known_device.connected:
+            # Update device to connected, but keep scripts and other info
+            known_device.connected = True
+            devices.append(known_device)
+        elif mac not in fetched_devices and known_device.connected:
+            # Mark the device as disconnected
+            known_device.connected = False
+            disconnected_devices.append(known_device)
+            devices.append(known_device)
+        else:
+            devices.append(known_device)
+
+    counter = 0
+    # Add newly connected devices to the list
+    for mac, device in fetched_devices.items():
+        if mac not in known_devices:
+            counter = counter+1
+            print(f"new Device: {counter}")
+            new_devices.append(device)
+            devices.append(device)
+
+    # Save the updated list of devices
+    for device in devices:
+        print(device)
+
+    save_known_devices(devices)
+
+    return new_devices, disconnected_devices, connected_devices
+
 
 if __name__ == "__main__":
-    new_devices, disconnected_devices = detect_changes()
+    new_devices, disconnected_devices, connected_devices = detect_changes()
 
-    if new_devices or disconnected_devices:
+    if new_devices or disconnected_devices or connected_devices:
         print("Device list changed!")
-        print(f"New devices: {json.dumps(new_devices, indent=4)}")
-        print(f"Disconnected devices: {json.dumps(disconnected_devices, indent=4)}")
 
-        # Execute another script based on newly connected devices
         if new_devices:
-            subprocess.run(["python", "handle_new_devices.py"], check=True)
+            print(f"New devices: {json.dumps([device.__dict__ for device in new_devices], indent=4)}")
+        
+        if disconnected_devices:
+            print(f"Disconnected devices: {json.dumps([device for device in disconnected_devices], indent=4)}")
+        
+        if connected_devices:
+            print(f"Reconnected devices: {json.dumps([device.__dict__ for device in connected_devices], indent=4)}")
+
+        # We no longer need to re-create Device objects for connected_devices or disconnected_devices.
+        # Just work directly with the Device objects in the lists.
+
+        # Check and execute scripts for newly connected devices
+        if new_devices:
+            for device in new_devices:
+                if device.scripts:  # Check if the device has scripts
+                    for script in device.scripts:  # Iterate through all scripts
+                        print(f"Executing script: {script} for device: {device.name}")
+                        # try:
+                        #     # subprocess.run(script, shell=True, check=True)  # Execute the script
+                        # except subprocess.CalledProcessError as e:
+                        #     print(f"Error executing script {script} for {device.name}: {e}")
     else:
         print("No changes detected.")
