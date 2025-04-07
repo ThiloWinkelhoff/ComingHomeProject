@@ -2,5 +2,6 @@ from typing import List
 import ConfigLEDmatrix
 
 def handle_client_arrival(scripts: List[str]):
+    device = ConfigLEDmatrix.initialize_device()
     for script in scripts:
-        ConfigLEDmatrix.display_text(script)#falsche methode
+        ConfigLEDmatrix.vertical_scroll(device, script)
