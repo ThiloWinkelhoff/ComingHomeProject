@@ -13,7 +13,7 @@ if __name__ == "__main__":
     known_devices = "" ;#hier müssen die devices aus der json rein
     fh = ConfigRouter.configure_Router()
     session_devices = ConfigRouter.get_session_devices(fh)
-    matrix_device = ConfigLEDmatrix.initialize_device()
+    matrix_device = ConfigLEDmatrix.initialize_device(1,0,0,False)
     
     while True:
         connectedDevices = ConfigRouter.get_session_devices(fh)
