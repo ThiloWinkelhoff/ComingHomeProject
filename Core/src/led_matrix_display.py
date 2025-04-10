@@ -18,8 +18,8 @@ def vertical_scroll(device, words):
     print("Vertical scrolling")
     virtual = viewport(device, width=device.width, height=len(words) * 8)
     with canvas(virtual) as draw:
-        for i, words in enumerate(words):
-            text(draw, (0, i * 8), word, fill="white", font=proportional(CP437_FONT)) #what does word mean?
+        for i, word in enumerate(words):
+            text(draw, (0, i * 8), word, fill="white", font=proportional(CP437_FONT))
     for i in range(virtual.height - device.height):
         virtual.set_position((0,i))
         time.sleep(0.05)
