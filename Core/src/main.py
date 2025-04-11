@@ -1,6 +1,6 @@
 import time
 import ClientArrivedEvent
-import ConfigRouter
+import device_monitor
 import ConfigLEDmatrix
 from typing import List
 
@@ -10,18 +10,20 @@ class Device:
     scripts: List[str]
 
 if __name__ == "__main__":
-    known_devices = "" ;#hier müssen die devices aus der json rein
-    fh = ConfigRouter.configure_Router()
-    session_devices = ConfigRouter.get_session_devices(fh)
+
+    new_devices, disconnected_devices, connected_devices = device_monitor.detect_changes()
+
+    unique_scripts = list({script for device in connected_devices for script in device.Scripts})
+
     matrix_device = ConfigLEDmatrix.initialize_device(1,0,0,False)
     
     while True:
-        connectedDevices = ConfigRouter.get_session_devices(fh)
-        for connectedDevice in connectedDevices:
-            if not(session_devices.__contains__(connectedDevice)):
-                if known_devices.__contains__(connectedDevice):
-                  #  var temp = known_devices.Where(x => x.IP == connectedDevice)
+        
+        new_devices, disconnected_devices, connected_devices = device_monitor.detect_changes()
+
+        unique_scripts = list({script for device in connected_devices for script in device.Scripts})
+        
+        for script in unique_scripts:
                     ClientArrivedEvent.handle_client_arrival(matrix_device) #hier müssen die scripte von dem device ausgegeben werden
                     print("invoke ClientArrivedEvent")
-                session_devices.__add__(connectedDevice)
         time.sleep(10000)
