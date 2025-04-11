@@ -3,6 +3,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
+import ConfigLEDmatrix
 import time
 
 def display_text(device, msg, font=CP437_FONT):
@@ -24,11 +25,13 @@ def vertical_scroll(device, words):
         virtual.set_position((0,i))
         time.sleep(0.05)
 
-        
-def demo(device, n, block_orientation, rotate, inreverse):
-    #device = initialize_device(n, block_orientation, rotate, inreverse)
+def demo(device):
     print("Created Device")
 
     display_text(device, "MAX7219 LED MATRIX Demo")
 
     vertical_scroll(device, ["Victor", "Echo", "Rome", "Tango", "India"])
+
+if __name__ == "__main__":
+    device = ConfigLEDmatrix.initialize_device()
+    demo(device)

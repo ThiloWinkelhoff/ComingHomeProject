@@ -3,7 +3,7 @@ from luma.led_matrix.device import max7219
 from luma.core.interface.serial import spi, noop
 
 
-def initialize_device(n, block_orientation, rotate, inreverse):
+def initialize_device(n = 1, block_orientation = 0, rotate = 0, inreverse = False):
     serial = spi(port=0, device=0, gpio=noop())
     return max7219(serial, cascaded=n, block_orientation=block_orientation, 
                      rotate=rotate or 0, blocks_arranged_in_reverse_order=inreverse)
