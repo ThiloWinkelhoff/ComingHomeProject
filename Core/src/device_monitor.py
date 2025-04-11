@@ -94,10 +94,6 @@ def detect_changes():
             new_devices.append(device)
             devices.append(device)
  
-    # Save the updated list of devices
-    for device in devices:
-        print(device)
- 
     save_known_devices(devices)
  
     return new_devices, disconnected_devices, connected_devices
