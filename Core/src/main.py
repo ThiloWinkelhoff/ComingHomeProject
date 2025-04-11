@@ -25,5 +25,5 @@ if __name__ == "__main__":
         
         for script in unique_scripts:
                     ClientArrivedEvent.handle_client_arrival(matrix_device) #hier müssen die scripte von dem device ausgegeben werden
-                    print("invoke ClientArrivedEvent")
+                    print(script)
         time.sleep(10000)
