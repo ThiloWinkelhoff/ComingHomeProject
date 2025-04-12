@@ -18,8 +18,11 @@ if __name__ == "__main__":
         print("Running...")
 
         # Update device status (you might want to check changes, new, or disconnected devices)
-        new_devices, disconnected_devices, connected_devices = device_monitor.detect_changes()
- 
+        try:
+            new_devices, disconnected_devices, connected_devices = device_monitor.detect_changes()
+        except KeyboardInterrupt:
+            print("Stopped by user (Ctrl+C)") 
+            break
         # Collect unique scripts from the connected devices
         unique_scripts = list({script for device in connected_devices for script in device.scripts})
 

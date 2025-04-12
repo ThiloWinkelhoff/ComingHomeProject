@@ -1,6 +1,6 @@
 import json
 import os
-# from FritzBoxConnection import fetch_connected_devices
+from FritzBoxConnection import fetch_connected_devices
 import subprocess
 import device_test
 
@@ -55,16 +55,16 @@ def save_known_devices(devices):
  
 def detect_changes():
     """Detect newly connected and disconnected devices."""
-    # fetched_devices = fetch_connected_devices()
-    fetched_devices = device_test.get_example_devices()
+    fetched_devices = fetch_connected_devices()
+    # fetched_devices = device_test.get_example_devices()
     known_devices = load_known_devices()  # Load known devices from the file
-    fetched_devices = {device.mac: device for device in fetched_devices}
+    # fetched_devices = {device.mac: device for device in fetched_devices}
 
     # Create a set of MAC addresses for easy comparison
     known_devices = {device['mac']: Device(device['name'], device['ip'], device['mac'], device['connected'], device.get('scripts', [])) for device in known_devices}
  
     # Create a dictionary of current devices by MAC address for easy lookup
-    # fetched_devices = {device['mac']: Device(device['name'], device['ip'], device['mac']) for device in fetched_devices}
+    fetched_devices = {device['mac']: Device(device['name'], device['ip'], device['mac']) for device in fetched_devices}
  
     # Track newly connected, disconnected, and reconnected devices
     new_devices = []

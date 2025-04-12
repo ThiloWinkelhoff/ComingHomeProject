@@ -1,8 +1,0 @@
-#
-# Ignoring the secrets to connect to the Router
-# Uncomment this in case you need to make changes to the Usersecrets
-# Watch out to not commit anything sensitive
-# 
-secrets.json
-
-# Ignoring Connected devices
