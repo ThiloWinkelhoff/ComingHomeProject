@@ -1,7 +1,7 @@
 import time
 import device_monitor
-import ConfigLEDmatrix
-import led_matrix_display as matrix
+#import ConfigLEDmatrix
+#import led_matrix_display as matrix
 from typing import List
 
 if __name__ == "__main__":
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # Set to collect unique scripts from connected devices
     unique_scripts = list({script for device in connected_devices for script in device.scripts})
 
-    matrix_device = ConfigLEDmatrix.initialize_device(1, 0, 0, False)
+    #matrix_device = ConfigLEDmatrix.initialize_device(1, 0, 0, False)
     
     while True:
         print("Running...")
@@ -23,11 +23,15 @@ if __name__ == "__main__":
         # Collect unique scripts from the connected devices
         unique_scripts = list({script for device in connected_devices for script in device.scripts})
 
-        # Print each unique script
-        for script in unique_scripts:
-            # ClientArrivedEvent.handle_client_arrival(matrix_device) # Use the scripts here
-            print(script)
-            matrix.display_text(matrix_device, script)
+        if not unique_scripts:
+                current_time = time.strftime("%H:%M:%S")
+
+                print(f"Current Time: {current_time}")
+                #matrix.display_text(matrix_device, current_time)
+        else:
+            for script in unique_scripts:
+                print(script)
+                # matrix.display_text(matrix_device, script)
 
         # Pause before the next loop
-        time.sleep(10)
+        time.sleep(1)
