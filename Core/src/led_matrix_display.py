@@ -6,31 +6,16 @@ from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_
 import ConfigLEDmatrix
 import time
 
+#default displaying of text on matrix
 def display_text(device, msg, font=CP437_FONT):
     print(msg)
     show_message(device, msg, fill="white", font=proportional(font))
     time.sleep(1)
 
-def scroll_text(device, msg, font=LCD_FONT, speed=0.1):
-    print(msg)
-    show_message(device, msg, fill="white", font=proportional(font), scroll_delay=speed),
-
-def vertical_scroll(device, words):
-    print("Vertical scrolling")
-    virtual = viewport(device, width=device.width, height=len(words) * 8)
-    with canvas(virtual) as draw:
-        for i, word in enumerate(words):
-            text(draw, (0, i * 8), word, fill="white", font=proportional(CP437_FONT))
-    for i in range(virtual.height - device.height):
-        virtual.set_position((0,i))
-        time.sleep(0.05)
-
 def demo(device):
     print("Created Device")
 
     display_text(device, "MAX7219 LED MATRIX Demo")
-
-    vertical_scroll(device, ["Victor", "Echo", "Rome", "Tango", "India"])
 
 if __name__ == "__main__":
     device = ConfigLEDmatrix.initialize_device()
