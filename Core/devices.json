@@ -1,1 +1,86 @@
-[]
+[
+    {
+        "name": "A71-von-Angela",
+        "ip": "192.168.178.30",
+        "mac": "1E:AD:9A:74:FD:40",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "BRW9C2A70644A5F",
+        "ip": "192.168.178.29",
+        "mac": "9C:2A:70:64:4A:5F",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "ISG-15FY724",
+        "ip": "192.168.178.99",
+        "mac": "4C:49:6C:14:5D:C5",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "M2007J3SY",
+        "ip": "192.168.178.48",
+        "mac": "34:1C:F0:FF:22:8C",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "PC-30-D3-2D-6C-68-BA",
+        "ip": "",
+        "mac": "30:D3:2D:6C:68:BA",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "PC-30-D3-2D-B9-7C-76",
+        "ip": "",
+        "mac": "30:D3:2D:B9:7C:76",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "Thomas-La",
+        "ip": "192.168.178.24",
+        "mac": "EE:D2:AC:66:9E:14",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "devolo-559",
+        "ip": "",
+        "mac": "30:D3:2D:F8:D9:2F",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "devolo-559",
+        "ip": "192.168.178.52",
+        "mac": "30:D3:2D:F8:D9:2E",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "devolo-wifi",
+        "ip": "192.168.178.39",
+        "mac": "30:D3:2D:B9:7C:74",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "fritz.box",
+        "ip": "192.168.178.1",
+        "mac": "2C:91:AB:5F:58:2A",
+        "scripts": [],
+        "connected": true
+    },
+    {
+        "name": "skyq",
+        "ip": "192.168.178.40",
+        "mac": "E8:B2:FE:26:65:DB",
+        "scripts": [],
+        "connected": true
+    }
+]

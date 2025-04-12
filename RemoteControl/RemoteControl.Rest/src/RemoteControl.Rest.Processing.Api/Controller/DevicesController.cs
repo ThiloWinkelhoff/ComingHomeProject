@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RemoteControl.Rest.Common;
+using RemoteControl.Rest.Processing.Commands;
 
 namespace RemoteControl.Rest.Processing.Api.Controller;
 
@@ -15,10 +17,12 @@ public class DevicesController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<string> GerAllDevices()
+    public async Task<ActionResult<IEnumerable<DeviceDto>>> GetAllDevices()
     {
-        return new List<string> { "test1", "test2", "test3" };
+        IEnumerable<DeviceDto> devices = await _mediator.Send(new GetConnectedDevicesCommand());
+        return Ok(devices);
     }
+
 
     [HttpGet("connected")]
     public IEnumerable<string> GetConnectedDevices()

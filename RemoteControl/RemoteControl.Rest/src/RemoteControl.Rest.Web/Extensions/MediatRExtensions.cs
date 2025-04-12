@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using RemoteControl.Rest.Processing.Commands;
+using RemoteControl.Rest.Persistence;
 
 namespace RemoteControl.Rest.Web.Extensions;
 
@@ -14,7 +14,7 @@ internal static class MediatRExtensions
         {
             cfg.RegisterServicesFromAssemblies(
                 Assembly.GetExecutingAssembly(),
-                typeof(GetConnectedDevicesAllTimeCommand).Assembly
+                typeof(GetConnectedDevicesCommandHandler).Assembly
             );
         });
     }

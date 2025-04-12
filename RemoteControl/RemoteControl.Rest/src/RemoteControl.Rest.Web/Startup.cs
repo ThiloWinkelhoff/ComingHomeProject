@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using RemoteControl.Rest.Persistence.Database;
 using RemoteControl.Rest.Web.Extensions;
 
 namespace RemoteControl.Rest.Web;
@@ -82,6 +84,8 @@ public class Startup
             _env,
             _policy,
             logger);
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(_configuration.GetConnectionString("ComingHomeDatabase")));
     }
 
     /// <summary>

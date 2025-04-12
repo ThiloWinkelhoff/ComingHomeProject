@@ -4,6 +4,10 @@ public class Device
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    public string Ip { get; set; }
+    public string Mac { get; set; }
+    public bool Connected { get; set; }
 
-    public List<DeviceScript> DeviceScripts { get; set; } = new();
+    // Navigation property to DeviceScriptsMapping
+    public ICollection<DeviceScriptsMapping> DeviceScriptsMappings { get; set; }
 }
