@@ -9,7 +9,7 @@ password = 'CHU'
 # Create the connection string using SQL Server ODBC driver
 connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
 
-def CheckIfConnected(mac):
+def CompareAgainstDatabase(mac):
     # Establish the connection
     try:
         print("start")
@@ -19,14 +19,19 @@ def CheckIfConnected(mac):
         cursor = conn.cursor()
 
         # Execute a query
-        cursor.execute("SELECT Connected FROM Devices WHERE Mac = ?", (mac,))
+        cursor.execute("SELECT CONNECTED, MAC FROM Devices WHERE MAC = ?", (mac,))
 
         # Fetch all rows from the query
         rows = cursor.fetchall()
 
+        scripts = []
+
         # Print the rows
         for row in rows:
-            print(row)
+            if row['CONNECTED'] == True:
+                cursor.execute("SELECT SCRIPTS FROM DEVICES WHERE MAC = ?",(row["MAC"]))
+                scripts.insert(cursor.fetchall())
+                cursor.execute('UPDATE DEVICES WHERE MAC = ? SET CONNECTED = TRUE',(row['MAC']))
 
         # Close the cursor
         cursor.close()
@@ -41,4 +46,4 @@ def CheckIfConnected(mac):
             print("Connection not established.")
 
 if __name__ == "__main__":
-    CheckIfConnected("AA:BB:CC:DD:EE:02")
+    CompareAgainstDatabase(["AA:BB:CC:DD:EE:02","AA:BB:CC:DD:EE:02","AA:BB:CC:DD:EE:02"])

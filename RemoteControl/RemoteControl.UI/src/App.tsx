@@ -1,33 +1,32 @@
-import { Route, Routes } from "react-router-dom"; // Use Routes and Route here, but no BrowserRouter
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home/Home";
-import Login from "./Pages/Login/Login";
-import Linked from "./Pages/Linked/Linked";
 import Devices from "./Pages/Devices/Devices";
-import Sidebar from "./Components/Sidebar/Sidebar";
 import Scripts from "./Pages/Scripts/Scripts";
+import { Box } from "@mui/material";
+import Header from "./Components/Sidebar/Header";
+import NotFound from "./Pages/NotFound/NotFound";
 
 function App() {
   return (
-    <div
-      className="AppContainer"
-      style={{ display: "flex", height: "100vh", width: "100vw" }}
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateRows: "50px 1fr",
+        height: "100vh",
+        width: "100vw",
+        bgcolor: "#000000",
+      }}
     >
-      {/* Sidebar Component */}
-      <Sidebar />
+      <Header />
 
-      {/* Main Content */}
-      <div className="contentContainer">
-        <Routes>
-          <Route path="/linked" element={<Linked />} />
-          <Route path="/devices" element={<Devices />} />
-          <Route path="/scripts" element={<Scripts />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </div>
-    </div>
+      <Routes>
+        <Route path="/devices" element={<Devices />} />
+        <Route path="/scripts" element={<Scripts />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Box>
   );
 }
 

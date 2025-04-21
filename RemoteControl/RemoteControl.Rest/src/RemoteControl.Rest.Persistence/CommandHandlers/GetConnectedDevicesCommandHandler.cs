@@ -5,7 +5,7 @@ using RemoteControl.Rest.Persistence.Database;
 using RemoteControl.Rest.Persistence.Database.Models;
 using RemoteControl.Rest.Processing.Commands;
 
-namespace RemoteControl.Rest.Persistence;
+namespace RemoteControl.Rest.Persistence.CommandHandlers;
 
 public class GetConnectedDevicesCommandHandler : IRequestHandler<GetConnectedDevicesCommand, IEnumerable<DeviceDto>>
 {

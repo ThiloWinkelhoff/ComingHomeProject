@@ -1,10 +1,15 @@
-const Scripts = () => {
+import MockData from "../../Common/Script";
+import ItemDisplay from "../../Components/Display/ItemDisplay";
+
+function Scripts() {
   return (
-    <div className="ScriptsContainer">
-      <h1>Scripts Page</h1>
-      <p>This is the Scripts page.</p>
-    </div>
+    <ItemDisplay
+      items={MockData}
+      header={"Scripts"}
+      subHeader={"Devices"}
+      newPrompt={"Device"}
+    ></ItemDisplay>
   );
-};
+}
 
 export default Scripts;

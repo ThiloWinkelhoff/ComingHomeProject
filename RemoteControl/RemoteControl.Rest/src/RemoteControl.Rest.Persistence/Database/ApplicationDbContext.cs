@@ -3,6 +3,11 @@ using RemoteControl.Rest.Persistence.Database.Models;
 
 namespace RemoteControl.Rest.Persistence.Database;
 
+/// <summary>
+///     Database Connection for the application.
+///     Configured in the application appsettings.json
+///     under Connection Strings
+/// </summary>
 public class ApplicationDbContext : DbContext
 {
     public DbSet<Device> Devices { get; set; }

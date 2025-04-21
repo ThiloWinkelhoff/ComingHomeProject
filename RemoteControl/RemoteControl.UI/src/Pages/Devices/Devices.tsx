@@ -1,10 +1,14 @@
+import ItemDisplay from "../../Components/Display/ItemDisplay";
+import mockDeviceData from "../../Common/Device";
+
 function Devices() {
   return (
-    <>
-      <div className="DevicesContainer">
-        <h1>Devices</h1>
-      </div>
-    </>
+    <ItemDisplay
+      items={mockDeviceData}
+      header={"Devices"}
+      subHeader="Scripts"
+      newPrompt="Script"
+    ></ItemDisplay>
   );
 }
 
