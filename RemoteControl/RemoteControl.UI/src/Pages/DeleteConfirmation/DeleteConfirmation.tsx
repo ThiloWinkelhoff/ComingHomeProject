@@ -1,11 +1,31 @@
 import React from "react";
 import { Box, Button, Container, Typography, Paper } from "@mui/material";
+import Item from "../../Common/Item";
 
 interface Props {
-  loginClosed: () => void;
+  confirmationClosed: (deleted: boolean) => void;
+  item: Item | null;
+  subitem: number | null;
 }
 
-const Login: React.FC<Props> = ({ loginClosed }) => {
+const DeleteConfirmation: React.FC<Props> = ({
+  confirmationClosed: loginClosed,
+  item,
+  subitem,
+}) => {
+  async function confirmDeletion(): Promise<void> {
+    if (item === null || subitem === null) {
+      return;
+    }
+    const success = await item.removeSubItem(subitem);
+    if (success) {
+      loginClosed(true);
+    } else {
+      // Optional: handle failure case
+      console.error("Failed to remove subitem");
+    }
+  }
+
   return (
     <Container maxWidth="sm">
       <Paper
@@ -21,7 +41,7 @@ const Login: React.FC<Props> = ({ loginClosed }) => {
       >
         {/* SVG Close Button */}
         <Button
-          onClick={() => loginClosed()}
+          onClick={() => loginClosed(false)}
           sx={{
             position: "absolute",
             top: 16,
@@ -60,6 +80,7 @@ const Login: React.FC<Props> = ({ loginClosed }) => {
           justifyContent="space-evenly"
         >
           <Button
+            onClick={confirmDeletion}
             variant="contained"
             color="error"
             sx={{
@@ -84,7 +105,7 @@ const Login: React.FC<Props> = ({ loginClosed }) => {
                 backgroundColor: "#1e1e1e",
               },
             }}
-            onClick={loginClosed}
+            onClick={() => loginClosed(false)}
           >
             Abort
           </Button>
@@ -94,4 +115,4 @@ const Login: React.FC<Props> = ({ loginClosed }) => {
   );
 };
 
-export default Login;
+export default DeleteConfirmation;

@@ -22,17 +22,4 @@ public class ScriptsController : ControllerBase
         IEnumerable<ScriptDto> devices = await _mediator.Send(new GetScriptsCommand());
         return Ok(devices);
     }
-
-    [HttpGet("Unmapped/{id}")]
-    public async Task<IActionResult> GetUnmappedDevices(int id)
-    {
-        IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedDevicesCommand(id));
-
-        if (script == null)
-        {
-            return NotFound($"No unmapped script found with ID: {id}");
-        }
-
-        return Ok(script);
-    }
 }

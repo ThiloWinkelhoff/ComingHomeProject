@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RemoteControl.Rest.Common;
 using RemoteControl.Rest.Processing.Commands;
 
 namespace RemoteControl.Rest.Processing.Api.Controller;
@@ -53,5 +54,38 @@ public class MappingController : ControllerBase
         }
 
         return Ok(true);
+    }
+
+    /// <summary>
+    ///     Fetches Scripts which are not mapped to the <c>Device</c> with the
+    ///     identifier <paramref name="id" />
+    ///     connection
+    /// </summary>
+    /// <param name="id">The <c>id</c> of the <c>Device</c></param>
+    /// <returns></returns>
+    [HttpGet("Script/{id}/Unmapped")]
+    public async Task<IActionResult> GetUnmappedDevices(int id)
+    {
+        IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedDevicesCommand(id));
+
+        if (script == null)
+        {
+            return NotFound($"No unmapped script found with ID: {id}");
+        }
+
+        return Ok(script);
+    }
+
+    [HttpGet("Device/{id}/Unmapped")]
+    public async Task<IActionResult> GetUnmappedScripts(int id)
+    {
+        IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedScriptsCommand(id));
+
+        if (script == null)
+        {
+            return NotFound($"No unmapped script found with ID: {id}");
+        }
+
+        return Ok(script);
     }
 }

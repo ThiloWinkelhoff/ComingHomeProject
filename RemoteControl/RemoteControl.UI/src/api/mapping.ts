@@ -8,7 +8,10 @@ const RemoveMapping = async (
 ): Promise<boolean> => {
   try {
     const response = await api.delete<boolean>(`/mapping/remove`, {
-      data: { deviceId, scriptId },
+      data: {
+        scriptId,
+        deviceId,
+      },
     });
     return response.data;
   } catch (error) {
@@ -24,8 +27,8 @@ const AddMapping = async (
 ): Promise<boolean> => {
   try {
     const response = await api.post<boolean>(`/mapping/add`, {
-      deviceId,
       scriptId,
+      deviceId,
     });
     return response.data;
   } catch (error) {

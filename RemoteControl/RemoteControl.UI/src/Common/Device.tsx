@@ -1,6 +1,7 @@
 import ReducedItem from "./ReducedItem";
 import { fetchUnmappedScripts } from "../api/devices";
 import Item from "./Item";
+import { AddMapping, RemoveMapping } from "../api/mapping";
 
 // Device class as provided earlier
 class Device implements Item {
@@ -36,7 +37,7 @@ class Device implements Item {
       // Transform the fetched devices into ReducedItem objects (assuming this transformation is required)
       const reducedItems: ReducedItem[] = devices.map((device) => {
         // Creating ReducedItem from Device (mapping necessary fields)
-        return new ReducedItemImpl(device.id, device.name);
+        return new ReducedItem(device.id, device.name);
       });
 
       return reducedItems;
@@ -46,35 +47,22 @@ class Device implements Item {
     }
   }
 
-  // Implement removeSubItem (remove by id for example)
-  removeSubItem(subItemId: number): void {
-    const index = this.subItems.findIndex((item) => item.id === subItemId);
-    if (index !== -1) {
-      this.subItems.splice(index, 1); // Removes the subItem from the array
-    } else {
-      console.error("SubItem not found for removal.");
+  async removeSubItem(subItemId: number): Promise<boolean> {
+    try {
+      return await RemoveMapping(this.id, subItemId);
+    } catch (error) {
+      console.error("Error removing sub item:", error);
+      return false;
     }
   }
 
-  // Implement addSubItem (add a ReducedItem)
-  addSubItem(newSubItem: ReducedItem): void {
-    this.subItems.push(newSubItem); // Adds the new subItem to the array
-  }
-}
-
-// Implementation of ReducedItem
-class ReducedItemImpl implements ReducedItem {
-  id: number;
-  name: string;
-
-  constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
-  }
-
-  getContent(): string {
-    // Provide a meaningful content summary for ReducedItem
-    return `Item ID: ${this.id}, Name: ${this.name}`;
+  async addSubItem(subItemId: number): Promise<boolean> {
+    try {
+      return await AddMapping(this.id, subItemId);
+    } catch (error) {
+      console.error("Error adding sub item:", error);
+      return false;
+    }
   }
 }
 

@@ -6,8 +6,8 @@ interface Item {
   subItems: ReducedItem[];
   active: boolean;
   getUnconnected(): Promise<ReducedItem[]>;
-  removeSubItem(): Promise<boolean>;
-  addSubItem(): Promise<boolean>;
+  removeSubItem(subItemId: number): Promise<boolean>;
+  addSubItem(subItemId: number): Promise<boolean>;
 }
 
 export default Item;

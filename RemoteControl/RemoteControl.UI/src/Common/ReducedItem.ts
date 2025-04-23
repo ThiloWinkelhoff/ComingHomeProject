@@ -1,7 +1,11 @@
-interface ReducedItem {
+class ReducedItem {
   id: number;
   name: string;
-  getContent(): string;
+
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
 }
 
 export default ReducedItem;
