@@ -18,6 +18,7 @@ jobs:
       API_ROOT: ./RemoteControl/RemoteControl.Rest
       WEB_WWWROOT: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot
       ARTIFACTS: ./artifacts
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -85,20 +86,26 @@ jobs:
         run: |
           mkdir -p $ARTIFACTS/api/windows
           cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/windows/* $ARTIFACTS/api/windows/
-
+      
+      - name: Check files before zipping
+        run: |
+          find $ARTIFACTS
       # --- Zip all artifacts ---
       - name: Zip all artifacts
         run: |
-          zip -r published-artifacts.zip $ARTIFACTS
-          mv published-artifacts.zip $ARTIFACTS/
+            set -e
+            zip -r $ARTIFACTS/published-artifacts.zip $ARTIFACTS
       
-
       # --- Upload zipped artifact ---
       - name: Upload zipped artifact
         uses: actions/upload-artifact@v4
         with:
           name: published-artifacts
           path: $ARTIFACTS/published-artifacts.zip
+      
+      - name: Check zip contents
+        run: |
+            unzip -l $ARTIFACTS/published-artifacts.zip
 
       # --- Save artifacts ---
       - name: Upload artifacts
