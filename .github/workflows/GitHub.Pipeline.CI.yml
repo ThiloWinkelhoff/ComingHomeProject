@@ -91,18 +91,19 @@ jobs:
       - name: Zip all artifacts
         run: |
           cd $ARTIFACTS
-          zip -r published-artifacts.zip .
-          mv published-artifacts.zip ../artifacts/
+          zip -r published-artifacts.zip . 
+          mv published-artifacts.zip $ARTIFACTS/
 
+      # --- Upload zipped artifact ---
       - name: Upload zipped artifact
         uses: actions/upload-artifact@v3
         with:
           name: published-artifacts
-          path: artifacts/published-artifacts.zip
+          path: $ARTIFACTS/published-artifacts.zip
 
       # --- Save artifacts ---
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: published-project
-          path: artifacts
+          path: $ARTIFACTS/
