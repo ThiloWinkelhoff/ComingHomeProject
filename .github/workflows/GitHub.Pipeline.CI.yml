@@ -71,15 +71,11 @@ jobs:
         run: |
           cd $API_ROOT/src/RemoteControl.Rest.Web
           dotnet publish -c Release -p:PublishProfile=LinuxProfile
+
       - name: Move published Linux build to artifacts
         run: |
           mkdir -p $ARTIFACTS/api/linux
           cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/linux/* $ARTIFACTS/api/linux/
-
-      - name: Move published Windows build to artifacts
-        run: |
-          mkdir -p $ARTIFACTS/api/windows
-          cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/windows/* $ARTIFACTS/api/windows/
 
       - name: Publish Windows
         run: |
@@ -95,17 +91,18 @@ jobs:
       - name: Zip all artifacts
         run: |
           cd $ARTIFACTS
-          zip -r ../published-artifacts.zip .
+          zip -r published-artifacts.zip .
+          mv published-artifacts.zip ../artifacts/
 
       - name: Upload zipped artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: published-artifacts
           path: published-artifacts.zip
 
       # --- Save artifacts ---
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: published-project
           path: artifacts
