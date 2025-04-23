@@ -27,9 +27,9 @@ class Device:
 def get_example_devices():
     """Return a list of example Device objects for testing."""
     example_data = [
-        Device(name="Laptop", ip="192.168.0.101", mac="AA:BB:CC:DD:EE:01", connected=True, scripts=["echo Hello from Laptop"]),
-        Device(name="Smartphone", ip="192.168.0.102", mac="AA:BB:CC:DD:EE:02", connected=False),
-        Device(name="Printer", ip="192.168.0.103", mac="AA:BB:CC:DD:EE:03", connected=True),
-        Device(name="TV", ip="192.168.0.104", mac="AA:BB:CC:DD:EE:04", connected=True, scripts=["echo Starting TV service"]),
+        Device(name="Laptop", ip="192.168.0.101", mac="AA:BB:CC:DD:EE:01"),
+        Device(name="Smartphone", ip="192.168.0.102", mac="AA:BB:CC:DD:EE:02"),
+        Device(name="Printer", ip="192.168.0.103", mac="AA:BB:CC:DD:EE:03"),
+        Device(name="TV", ip="192.168.0.104", mac="AA:BB:CC:DD:EE:04"),
     ]
     return example_data
