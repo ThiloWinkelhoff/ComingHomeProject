@@ -1,0 +1,109 @@
+name: Build Project
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHON_ROOT: ./Core
+      UI_ROOT: ./RemoteControl/RemoteControl.UI
+      API_ROOT: ./RemoteControl/RemoteControl.Rest
+      WEB_WWWROOT: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot
+      ARTIFACTS: ./artifacts
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # --- Python Build ---
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: |
+          cd $PYTHON_ROOT
+          pip install -r requirements.txt
+
+      - name: Package Python project
+        run: |
+          mkdir -p $ARTIFACTS/python
+          cp -r $PYTHON_ROOT/src/* $ARTIFACTS/python/
+
+      # --- UI Build ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install UI dependencies and build
+        run: |
+          cd $UI_ROOT
+          npm ci
+          npm run build
+
+      - name: Move UI build to wwwroot
+        run: |
+          rm -rf $WEB_WWWROOT/*
+          cp -r $UI_ROOT/dist/* $WEB_WWWROOT/
+
+      # --- API Build ---
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: |
+          cd $API_ROOT
+          dotnet restore
+
+      - name: Publish Linux
+        run: |
+          cd $API_ROOT/src/RemoteControl.Rest.Web
+          dotnet publish -c Release -p:PublishProfile=LinuxProfile
+      - name: Move published Linux build to artifacts
+        run: |
+          mkdir -p $ARTIFACTS/api/linux
+          cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/linux/* $ARTIFACTS/api/linux/
+
+      - name: Move published Windows build to artifacts
+        run: |
+          mkdir -p $ARTIFACTS/api/windows
+          cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/windows/* $ARTIFACTS/api/windows/
+
+      - name: Publish Windows
+        run: |
+          cd $API_ROOT/src/RemoteControl.Rest.Web
+          dotnet publish -c Release -p:PublishProfile=WindowsProfile
+
+      - name: Move published Windows build to artifacts
+        run: |
+          mkdir -p $ARTIFACTS/api/windows
+          cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/windows/* $ARTIFACTS/api/windows/
+
+      # --- Zip all artifacts ---
+      - name: Zip all artifacts
+        run: |
+          cd $ARTIFACTS
+          zip -r ../published-artifacts.zip .
+
+      - name: Upload zipped artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: published-artifacts
+          path: published-artifacts.zip
+
+      # --- Save artifacts ---
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: published-project
+          path: artifacts
