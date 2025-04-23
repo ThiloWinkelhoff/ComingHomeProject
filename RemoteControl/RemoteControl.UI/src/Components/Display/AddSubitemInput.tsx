@@ -56,7 +56,7 @@ const AddSubItemInput = ({
           options={options}
           value={selected}
           getOptionLabel={(option) => option.name}
-          onChange={(event, newValue) => setSelected(newValue)}
+          onChange={(_event, newValue) => setSelected(newValue)}
           sx={{
             width: "100%",
             color: "white",
