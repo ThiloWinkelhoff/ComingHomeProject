@@ -18,6 +18,8 @@ jobs:
       API_ROOT: ./RemoteControl/RemoteControl.Rest
       WEB_WWWROOT: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot
       ARTIFACTS: ./artifacts
+      WindowsPublish: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/Properties/PublishProfiles/WindowsProfile.pubxml
+      LinuxPublish: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/Properties/PublishProfiles/LinuxProfile.pubxml
 
     steps:
       - name: Checkout code
@@ -70,7 +72,7 @@ jobs:
       - name: Publish Linux
         run: |
           cd $API_ROOT/src/RemoteControl.Rest.Web
-          dotnet publish -c Release -p:PublishProfile=LinuxProfile
+          dotnet publish -c Release -p:PublishProfile=$LinuxProfile
 
       - name: Move published Linux build to artifacts
         run: |
@@ -80,7 +82,7 @@ jobs:
       - name: Publish Windows
         run: |
           cd $API_ROOT/src/RemoteControl.Rest.Web
-          dotnet publish -c Release -p:PublishProfile=WindowsProfile
+          dotnet publish -c Release -p:PublishProfile=$WindowsProfile
 
       - name: Move published Windows build to artifacts
         run: |
