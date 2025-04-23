@@ -16,16 +16,16 @@ public class Program
         IHost host = CreateHostBuilder(args).Build();
 
         // Logs the completion of the initialisation
-        logger.Info("Initialization: Complete. Starting to serve requests.");
+        logger.Info("Initialization: Complete.");
 
         // Retrieves the Environment
         var env = host.Services.GetRequiredService<IHostEnvironment>();
-        logger.Info($"Initialisation: Running in {env.EnvironmentName} environment");
 
         // Log Kestrel endpoints
         var configuration = host.Services.GetRequiredService<IConfiguration>();
         configuration.LogKestrelEndpoints(logger);
 
+        logger.Info($"Initialisation: Running in {env.EnvironmentName} environment, starting to serve Requests");
         host.Run();
     }
 

@@ -1,10 +1,10 @@
-import MockData from "../../Common/Script";
+import fetchScripts from "../../api/Scripts";
 import ItemDisplay from "../../Components/Display/ItemDisplay";
 
 function Scripts() {
   return (
     <ItemDisplay
-      items={MockData}
+      fetching={fetchScripts}
       header={"Scripts"}
       subHeader={"Devices"}
       newPrompt={"Device"}

@@ -3,8 +3,8 @@
 public class DeviceScriptsMapping
 {
     public int DeviceId { get; set; }
-    public Device Device { get; set; } // Navigation property to Device
+    public virtual Device Device { get; set; } // Navigation property to Device
 
     public int ScriptId { get; set; }
-    public Script Script { get; set; } // Navigation property to Script
+    public virtual Script Script { get; set; } // Navigation property to Script
 }

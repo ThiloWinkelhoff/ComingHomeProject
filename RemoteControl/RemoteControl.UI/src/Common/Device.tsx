@@ -1,22 +1,6 @@
-import { JSX } from "react";
-import Item from "./Item";
 import ReducedItem from "./ReducedItem";
-import ScriptRender from "./ScriptRender";
-// Mock ReducedItem implementation
-class MockReducedItem implements ReducedItem {
-  id: number;
-  name: string;
-
-  constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
-  }
-
-  // Mock implementation of getContent method
-  getContent(): string {
-    return `Content for ${this.name}`;
-  }
-}
+import { fetchUnmappedScripts } from "../api/devices";
+import Item from "./Item";
 
 // Device class as provided earlier
 class Device implements Item {
@@ -33,7 +17,7 @@ class Device implements Item {
     ip: string,
     mac: string,
     active: boolean,
-    subItems: ReducedItem[]
+    subItems: ReducedItem[] = [] // Default empty array if not provided
   ) {
     this.id = id;
     this.name = name;
@@ -42,33 +26,56 @@ class Device implements Item {
     this.active = active;
     this.subItems = subItems;
   }
-  getContent(): JSX.Element {
-    return <ScriptRender></ScriptRender>;
+
+  // Marking getUnconnected as async to allow the use of await
+  async getUnconnected(): Promise<ReducedItem[]> {
+    try {
+      // Call the fetchUnmappedScripts function and await the result
+      const devices = await fetchUnmappedScripts(this.id);
+
+      // Transform the fetched devices into ReducedItem objects (assuming this transformation is required)
+      const reducedItems: ReducedItem[] = devices.map((device) => {
+        // Creating ReducedItem from Device (mapping necessary fields)
+        return new ReducedItemImpl(device.id, device.name);
+      });
+
+      return reducedItems;
+    } catch (error) {
+      console.error("Error fetching unmapped scripts:", error);
+      throw error; // Rethrow the error if needed
+    }
   }
 
-  removeSubItem(): void {
-    throw new Error("Method not implemented.");
+  // Implement removeSubItem (remove by id for example)
+  removeSubItem(subItemId: number): void {
+    const index = this.subItems.findIndex((item) => item.id === subItemId);
+    if (index !== -1) {
+      this.subItems.splice(index, 1); // Removes the subItem from the array
+    } else {
+      console.error("SubItem not found for removal.");
+    }
   }
-  addSubItem(): void {
-    throw new Error("Method not implemented.");
+
+  // Implement addSubItem (add a ReducedItem)
+  addSubItem(newSubItem: ReducedItem): void {
+    this.subItems.push(newSubItem); // Adds the new subItem to the array
   }
 }
 
-// Creating mock data for Device
-const mockDeviceData: Device[] = [
-  new Device(1, "Device One", "192.168.1.1", "00:14:22:01:23:45", true, [
-    new MockReducedItem(1, "Fetch Missed Calls"),
-    new MockReducedItem(2, "Light up Living Room"),
-  ]),
-  new Device(2, "Device Two", "192.168.1.2", "00:14:22:01:23:46", false, [
-    new MockReducedItem(3, "Light up Bathroom"),
-    new MockReducedItem(4, "Start Coffee Machine"),
-  ]),
-  new Device(3, "Device Three", "192.168.1.3", "00:14:22:01:23:47", true, [
-    new MockReducedItem(5, "SubItem E"),
-    new MockReducedItem(6, "SubItem F"),
-  ]),
-];
+// Implementation of ReducedItem
+class ReducedItemImpl implements ReducedItem {
+  id: number;
+  name: string;
 
-// Export the mock device data
-export default mockDeviceData;
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
+
+  getContent(): string {
+    // Provide a meaningful content summary for ReducedItem
+    return `Item ID: ${this.id}, Name: ${this.name}`;
+  }
+}
+
+export default Device;

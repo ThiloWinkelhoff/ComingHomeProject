@@ -1,4 +1,3 @@
-import { JSX } from "react";
 import ReducedItem from "./ReducedItem";
 
 interface Item {
@@ -6,9 +5,9 @@ interface Item {
   name: string;
   subItems: ReducedItem[];
   active: boolean;
-  getContent(): JSX.Element;
-  removeSubItem(): void;
-  addSubItem(): void;
+  getUnconnected(): Promise<ReducedItem[]>;
+  removeSubItem(): Promise<boolean>;
+  addSubItem(): Promise<boolean>;
 }
 
 export default Item;

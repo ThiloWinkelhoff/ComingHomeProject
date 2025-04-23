@@ -1,23 +1,29 @@
-const getConnectedDevices = async (): Promise<string> => {
+// getConnectedDevices.ts
+import api from "./api";
+import Device from "../Common/Device";
+import ReducedItem from "../Common/ReducedItem";
+
+const fetchConnectedDevices = async (): Promise<Device[]> => {
   try {
-    const response = await fetch("https://your-api-endpoint.com/devices", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any auth headers if needed
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
+    const response = await api.get<Device[]>("/Devices");
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch connected devices:", error);
     throw error;
   }
 };
 
-export default getConnectedDevices;
+const fetchUnmappedScripts = async (id: number): Promise<ReducedItem[]> => {
+  try {
+    // Correct string interpolation
+    const response = await api.get<ReducedItem[]>(`/Scripts/Unmapped/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch unmapped scripts:", error); // Corrected error message
+    throw error;
+  }
+};
+
+// Export both functions properly
+export default fetchConnectedDevices;
+export { fetchUnmappedScripts };

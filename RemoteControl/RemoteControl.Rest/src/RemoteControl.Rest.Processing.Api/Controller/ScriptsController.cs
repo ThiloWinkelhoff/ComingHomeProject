@@ -1,10 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RemoteControl.Rest.Common;
+using RemoteControl.Rest.Processing.Commands;
 
 namespace RemoteControl.Rest.Processing.Api.Controller;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ScriptsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -15,48 +17,22 @@ public class ScriptsController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<string> GetAllScripts()
+    public async Task<IActionResult> GetAllScriptsAsync()
     {
-        return new List<string> { "test1", "test2", "test3" };
+        IEnumerable<ScriptDto> devices = await _mediator.Send(new GetScriptsCommand());
+        return Ok(devices);
     }
 
-    [HttpGet("unlinked")]
-    public IEnumerable<string> GetUnlinkedDevices()
+    [HttpGet("Unmapped/{id}")]
+    public async Task<IActionResult> GetUnmappedDevices(int id)
     {
-        string[] scriptList1 = { "a", "b", "c" };
-        return scriptList1;
-    }
+        IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedDevicesCommand(id));
 
-    [HttpGet("inked")]
-    public IEnumerable<string> GetLikedDevices(int scriptId)
-    {
-        string[] scriptList1 = { "a", "b", "c" };
-        return scriptList1;
-    }
+        if (script == null)
+        {
+            return NotFound($"No unmapped script found with ID: {id}");
+        }
 
-    [HttpGet("{scriptId}/get-unlinked-devices")]
-    public IEnumerable<string> GetConnectedDevices(int scriptId)
-    {
-        string[] scriptList1 = { "a", "b", "c" };
-        string[] scriptList2 = { "d", "e", "f" };
-        string[] scriptList3 = { "g", "h", "i" };
-        var scriptMapping = new List<string[]>();
-        scriptMapping.Add(scriptList1);
-        scriptMapping.Add(scriptList2);
-        scriptMapping.Add(scriptList3);
-        return scriptMapping[scriptId];
-    }
-
-    [HttpGet("{scriptId}/get-linked-devices")]
-    public IEnumerable<string> GetUnconnectedScripts(int scriptId)
-    {
-        string[] scriptList1 = { "a", "b", "c" };
-        string[] scriptList2 = { "d", "e", "f" };
-        string[] scriptList3 = { "g", "h", "i" };
-        var scriptMapping = new List<string[]>();
-        scriptMapping.Add(scriptList1);
-        scriptMapping.Add(scriptList2);
-        scriptMapping.Add(scriptList3);
-        return scriptMapping[scriptId];
+        return Ok(script);
     }
 }

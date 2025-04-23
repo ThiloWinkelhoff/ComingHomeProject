@@ -6,5 +6,5 @@ public class Script
     public string ScriptName { get; set; }
 
     // Navigation property to DeviceScriptsMapping
-    public ICollection<DeviceScriptsMapping> DeviceScriptsMappings { get; set; } // Links to devices
+    public virtual ICollection<DeviceScriptsMapping> DeviceScriptsMappings { get; set; } // Links to devices
 }

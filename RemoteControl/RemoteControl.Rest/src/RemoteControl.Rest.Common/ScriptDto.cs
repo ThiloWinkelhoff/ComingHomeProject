@@ -1,20 +1,16 @@
 ﻿namespace RemoteControl.Rest.Common
 {
-    public class DeviceDto : IItem
+    public class ScriptDto : IItem
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Ip { get; set; }
-        public string Mac { get; set; }
         public bool Active { get; set; }
         public List<ReducedItem>? SubItems { get; set; }
 
-        public DeviceDto(int id, string name, string ip, string mac, bool active, List<ReducedItem>? subItems)
+        public ScriptDto(int id, string name, bool active, List<ReducedItem>? subItems)
         {
             Id = id;
             Name = name;
-            Ip = ip;
-            Mac = mac;
             Active = active;
             SubItems = subItems;
         }
@@ -25,7 +21,7 @@
                 Name);
         }
 
-        public static List<ReducedItem> ToReducedItemList(List<DeviceDto> scripts)
+        public static List<ReducedItem> ToReducedItemList(List<ScriptDto> scripts)
         {
             return scripts.Select(s => s.ToReducedItem()).ToList();
         }

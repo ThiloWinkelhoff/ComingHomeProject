@@ -9,5 +9,5 @@ public class Device
     public bool Connected { get; set; }
 
     // Navigation property to DeviceScriptsMapping
-    public ICollection<DeviceScriptsMapping> DeviceScriptsMappings { get; set; }
+    public virtual ICollection<DeviceScriptsMapping> DeviceScriptsMappings { get; set; }
 }

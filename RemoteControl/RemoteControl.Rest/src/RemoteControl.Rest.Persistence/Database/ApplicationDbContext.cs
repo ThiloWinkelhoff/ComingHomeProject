@@ -19,6 +19,12 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseLazyLoadingProxies();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Define the many-to-many relationship

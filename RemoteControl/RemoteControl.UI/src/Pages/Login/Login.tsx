@@ -7,6 +7,7 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import loginUser from "../../api/loginUser";
 
 interface Props {
   loginSuccessful: () => void;
@@ -16,10 +17,18 @@ interface Props {
 const Login: React.FC<Props> = ({ loginSuccessful, loginClosed }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = () => {
-    loginSuccessful();
-    loginClosed();
+  const handleLogin = async () => {
+    try {
+      const result = await loginUser({ username, password });
+      localStorage.setItem("token", result.token);
+      setError(null);
+      loginSuccessful();
+      loginClosed();
+    } catch {
+      setError("Invalid username or password.");
+    }
   };
 
   return (
@@ -92,6 +101,7 @@ const Login: React.FC<Props> = ({ loginSuccessful, loginClosed }) => {
               },
             }}
           />
+          {error && <Typography color="error">{error}</Typography>}
           <Button
             variant="contained"
             sx={{

@@ -1,10 +1,10 @@
+import fetchConnectedDevices from "../../api/devices";
 import ItemDisplay from "../../Components/Display/ItemDisplay";
-import mockDeviceData from "../../Common/Device";
 
 function Devices() {
   return (
     <ItemDisplay
-      items={mockDeviceData}
+      fetching={fetchConnectedDevices}
       header={"Devices"}
       subHeader="Scripts"
       newPrompt="Script"

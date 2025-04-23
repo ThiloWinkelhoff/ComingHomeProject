@@ -43,7 +43,7 @@ function Home() {
       >
         <Button
           component={Link}
-          to="/scripts"
+          to="/configure-devices"
           variant="outlined"
           sx={{
             px: 4,
@@ -73,7 +73,7 @@ function Home() {
 
         <Button
           component={Link}
-          to="/devices"
+          to="/configure-devices"
           variant="outlined"
           sx={{
             px: 4,
