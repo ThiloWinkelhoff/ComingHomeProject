@@ -18,7 +18,7 @@ jobs:
       API_ROOT: ./RemoteControl/RemoteControl.Rest
       WEB_WWWROOT: ./RemoteControl/RemoteControl.Rest/src/RemoteControl.Rest.Web/wwwroot
       ARTIFACTS: ./artifacts
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,7 +38,17 @@ jobs:
         run: |
           mkdir -p $ARTIFACTS/python
           cp -r $PYTHON_ROOT/src/* $ARTIFACTS/python/
-
+        
+      - name: Check Python artifact files
+        run: |
+          echo "Checking Python artifacts in $ARTIFACTS/python:"
+          if [ -d "$ARTIFACTS/python" ]; then
+            find $ARTIFACTS/python
+          else
+            echo "❌ Python artifacts directory not found!"
+            exit 1
+          fi
+        
       # --- UI Build ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -55,8 +65,18 @@ jobs:
         run: |
           rm -rf $WEB_WWWROOT/*
           cp -r $UI_ROOT/dist/* $WEB_WWWROOT/
-
-      # --- API Build ---
+         
+      - name: Check wwwroot content
+        run: |
+          echo "Checking contents of $WEB_WWWROOT:"
+          if [ -d "$WEB_WWWROOT" ]; then
+            find $WEB_WWWROOT
+          else
+            echo "❌ wwwroot directory not found!"
+            exit 1
+          fi
+        
+      # --- API Build Linux---
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -76,7 +96,18 @@ jobs:
         run: |
           mkdir -p $ARTIFACTS/api/linux
           cp -r $API_ROOT/src/RemoteControl.Rest.Web/bin/Release/net8.0/publish/linux/* $ARTIFACTS/api/linux/
-
+          
+      - name: Check API Linux build
+        run: |
+          echo "Checking Linux API artifacts:"
+          if [ -d "$ARTIFACTS/api/linux" ]; then
+            find $ARTIFACTS/api/linux
+          else
+            echo "❌ Linux build output not found!"
+            exit 1
+          fi
+        
+      # --- API Build Windows---
       - name: Publish Windows
         run: |
           cd $API_ROOT/src/RemoteControl.Rest.Web
@@ -90,6 +121,18 @@ jobs:
       - name: Check files before zipping
         run: |
           find $ARTIFACTS
+
+      - name: Check API Windows build
+        run: |
+          echo "Checking Windows API artifacts:"
+          if [ -d "$ARTIFACTS/api/windows" ]; then
+            find $ARTIFACTS/api/windows
+          else
+            echo "❌ Windows build output not found!"
+            exit 1
+          fi
+        
+
       # --- Zip all artifacts ---
       - name: Zip all artifacts
         run: |
@@ -103,13 +146,19 @@ jobs:
           name: published-artifacts
           path: $ARTIFACTS/published-artifacts.zip
       
-      - name: Check zip contents
+      - name: Confirm zip file exists
         run: |
-            unzip -l $ARTIFACTS/published-artifacts.zip
-
+          if [ -f "$ARTIFACTS/published-artifacts.zip" ]; then
+            echo "✅ Zip created:"
+            ls -lh $ARTIFACTS/published-artifacts.zip
+          else
+            echo "❌ Zip file not found!"
+            exit 1
+          fi
+        
       # --- Save artifacts ---
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: published-project
-          path: $ARTIFACTS/
+          path: ${{ env.ARTIFACTS }}/
