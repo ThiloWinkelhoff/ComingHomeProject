@@ -89,9 +89,9 @@ jobs:
       # --- Zip all artifacts ---
       - name: Zip all artifacts
         run: |
-          cd $ARTIFACTS
-          zip -r published-artifacts.zip . 
+          zip -r published-artifacts.zip $ARTIFACTS
           mv published-artifacts.zip $ARTIFACTS/
+      
 
       # --- Upload zipped artifact ---
       - name: Upload zipped artifact
