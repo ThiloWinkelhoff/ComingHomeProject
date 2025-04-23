@@ -96,14 +96,14 @@ jobs:
 
       # --- Upload zipped artifact ---
       - name: Upload zipped artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: published-artifacts
           path: $ARTIFACTS/published-artifacts.zip
 
       # --- Save artifacts ---
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: published-project
           path: $ARTIFACTS/
