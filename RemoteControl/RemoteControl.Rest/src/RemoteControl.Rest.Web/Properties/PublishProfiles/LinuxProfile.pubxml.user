@@ -5,8 +5,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Schule\Jahr 2\EVP_Huss\ProjektArbeit\RemoteControl\RemoteControl.Rest\src\RemoteControl.Rest.Web\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2025-03-16T16:08:45.2286267Z||;</History>
+    <_PublishTargetUrl>C:\Schule\Jahr 2\EVP_Huss\ProjektArbeit\RemoteControl\RemoteControl.Rest\src\RemoteControl.Rest.Web\bin\Release\net8.0\publish\linux\</_PublishTargetUrl>
+    <History>True|2025-04-23T16:46:31.3784171Z||;True|2025-03-16T17:08:45.2286267+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
