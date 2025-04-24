@@ -19,8 +19,10 @@ public class MappingController : ControllerBase
     /// <summary>
     ///     Adds a mapping between a script and a device.
     /// </summary>
-    /// <param name="scriptId">The ID of the script.</param>
-    /// <param name="deviceId">The ID of the device.</param>
+    /// <param name="request">
+    ///     Request containing the ID's of the <c>script</c> and
+    ///     <c>device</c> which are to be mapped.
+    /// </param>
     /// <returns>Returns true if the mapping was added, otherwise 404.</returns>
     [HttpPost("add")]
     public async Task<ActionResult<bool>> AddMapping([FromBody] AddMappingRequest request)
@@ -39,8 +41,10 @@ public class MappingController : ControllerBase
     /// <summary>
     ///     Removes a mapping between a script and a device.
     /// </summary>
-    /// <param name="scriptId">The ID of the script.</param>
-    /// <param name="deviceId">The ID of the device.</param>
+    /// <param name="request">
+    ///     Request containing the ID's of the <c>script</c> and
+    ///     <c>device</c> whose mapping should be removed.
+    /// </param>
     /// <returns>Returns true if the mapping was deleted, otherwise 404.</returns>
     [HttpDelete("remove")]
     public async Task<ActionResult<bool>> RemoveMapping([FromBody] RemoveMappingRequest request)
@@ -68,11 +72,6 @@ public class MappingController : ControllerBase
     {
         IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedDevicesCommand(id));
 
-        if (script == null)
-        {
-            return NotFound($"No unmapped script found with ID: {id}");
-        }
-
         return Ok(script);
     }
 
@@ -80,11 +79,6 @@ public class MappingController : ControllerBase
     public async Task<IActionResult> GetUnmappedScripts(int id)
     {
         IEnumerable<ReducedItem> script = await _mediator.Send(new GetUnmappedScriptsCommand(id));
-
-        if (script == null)
-        {
-            return NotFound($"No unmapped script found with ID: {id}");
-        }
 
         return Ok(script);
     }

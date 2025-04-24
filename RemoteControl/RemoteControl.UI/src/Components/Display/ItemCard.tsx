@@ -62,7 +62,7 @@ const ItemCard = ({
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List disablePadding sx={{ pl: 4, pb: 1, pr: 4 }}>
           <ListItemText>
-            <Typography>{subHeader}</Typography>
+            <Typography variant="h5">{subHeader}</Typography>
           </ListItemText>
           <AddSubItemInput
             newPrompt={newPrompt}

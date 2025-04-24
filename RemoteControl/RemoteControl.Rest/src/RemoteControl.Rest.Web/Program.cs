@@ -4,10 +4,20 @@ using RemoteControl.Rest.Web.Extensions;
 
 namespace RemoteControl.Rest.Web;
 
-public class Program
+/// <summary>
+///     Entry point for the <see cref="RemoteControl.Rest.Web" /> Project.
+///     initializing a <c>Microsoft.NET.Sdk.Web</c> process using the
+///     <see cref="Startup" /> Project Configuration.
+/// </summary>
+public static class Program
 {
+    /// <summary>
+    ///     Direct entry point for the <see cref="Program" />.
+    /// </summary>
+    /// <param name="args">Startup Arguments for the Application. </param>
     public static void Main(string[] args)
     {
+        // Initialisation of the logger configuration
         Logger? logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 
         logger.Info("Initialization: Starting");
@@ -41,8 +51,8 @@ public class Program
             {
                 IHostEnvironment env = context.HostingEnvironment;
 
+                // Section only loaded in debug mode using the appsettings.json environment specific
                 #if DEBUG
-                // Load configuration from appsettings.json
                 config.AddJsonFile("appsettings.json",
                         false,
                         true)
@@ -52,6 +62,7 @@ public class Program
                         true,
                         true);
 
+                // Adding User Secrets in development
                 if (env.IsDevelopment())
                 {
                     // This line enables loading secrets during development

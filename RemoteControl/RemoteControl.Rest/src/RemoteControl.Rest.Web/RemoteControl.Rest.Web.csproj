@@ -28,5 +28,4 @@
     <ProjectReference Include="..\RemoteControl.Rest.Processing.Api\RemoteControl.Rest.Processing.Api.csproj" />
     <ProjectReference Include="..\RemoteControl.Rest.Processing\RemoteControl.Rest.Processing.csproj" />
   </ItemGroup>
-
 </Project>

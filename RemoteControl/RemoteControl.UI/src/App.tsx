@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./Pages/Home/Home";
-import Devices from "./Pages/Devices/Devices";
-import Scripts from "./Pages/Scripts/Scripts";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Header from "./Components/Header/Header";
+import React, { Suspense } from "react";
+const Devices = React.lazy(() => import("./Pages/Devices/Devices"));
+const Scripts = React.lazy(() => import("./Pages/Scripts/Scripts"));
+const Home = React.lazy(() => import("./Pages/Home/Home"));
 
 function App() {
   return (
@@ -16,13 +17,14 @@ function App() {
       }}
     >
       <Header />
-
-      <Routes>
-        <Route path="/configure-devices" element={<Devices />} />
-        <Route path="/configure-scripts" element={<Scripts />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <Suspense fallback={<Typography>Loading...</Typography>}>
+        <Routes>
+          <Route path="/configure-devices" element={<Devices />} />
+          <Route path="/configure-scripts" element={<Scripts />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Suspense>
     </Box>
   );
 }

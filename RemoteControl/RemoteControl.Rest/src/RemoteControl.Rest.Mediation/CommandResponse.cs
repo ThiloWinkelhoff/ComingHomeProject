@@ -2,6 +2,10 @@
 
 namespace RemoteControl.Rest.Mediation;
 
+/// <summary>
+/// Response
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class CommandResponse<T>
 {
     /// <summary>

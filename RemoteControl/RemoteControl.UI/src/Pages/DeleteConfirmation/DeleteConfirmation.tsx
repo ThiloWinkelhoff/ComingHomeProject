@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Container, Typography, Paper } from "@mui/material";
 import Item from "../../Common/Item";
-
+import closeIcon from "../../assets/close.svg";
 interface Props {
   confirmationClosed: (deleted: boolean) => void;
   item: Item | null;
@@ -54,22 +54,14 @@ const DeleteConfirmation: React.FC<Props> = ({
             },
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="#e3e3e3"
-          >
-            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
+          <img src={closeIcon} alt="" />
         </Button>
 
-        <Typography variant="h4" gutterBottom color="white">
+        <Typography variant="h4" gutterBottom color="white" align="center">
           Confirm Deletion
         </Typography>
 
-        <Typography variant="body1" color="gray" mb={3}>
+        <Typography variant="body1" color="gray" mb={3} align="center">
           Are you sure you want to remove the mapping?
         </Typography>
 

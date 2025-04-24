@@ -42,7 +42,7 @@ const AddSubItemInput = ({
   return (
     <ListItem
       sx={{
-        p: 0,
+        pb: 0,
         height: "48px",
         display: "flex",
         justifyContent: "space-between",

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RemoteControl.Rest.Persistence.CommandHandlers
+﻿namespace RemoteControl.Rest.Persistence.CommandHandlers
 {
+    /// <summary>
+    ///     TODO: IMPLEMENT LOGIN USING JWT?
+    /// </summary>
     internal class LoginCommandHandler
     {
     }
