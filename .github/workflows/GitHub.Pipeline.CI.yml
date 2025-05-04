@@ -37,7 +37,7 @@ jobs:
       - name: Package Python project
         run: |
           mkdir -p $ARTIFACTS/python
-          cp -r $PYTHON_ROOT/src/* $ARTIFACTS/python/
+          cp -r $PYTHON_ROOT/src/. $ARTIFACTS/python/
         
       - name: Check Python artifact files
         run: |
