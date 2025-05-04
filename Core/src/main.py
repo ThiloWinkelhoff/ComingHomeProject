@@ -1,31 +1,39 @@
+import json
+import os
 import time
 import device_monitor
-#import ConfigLEDmatrix
-#import led_matrix_display as matrix
-from typing import List
+from fritzconnection.lib.fritzhosts import FritzHosts
 
 if __name__ == "__main__":
+    total_start = time.time()
+
+    # Step 1: Load secrets
+    start = time.time()
+    with open(os.getcwd() + '/secrets.json') as f:
+        secrets = json.load(f)
+
+    # Step 2: Initialize FritzHosts
+    start = time.time()
+    fritz_host = secrets['fritz_host']
+    username = secrets['username']
+    password = secrets['password']
+    fh = FritzHosts(address=fritz_host, user=username, password=password)
+
     while True:
         print("Running...")
 
-        # Update device status (you might want to check changes, new, or disconnected devices)
         try:
-            unique_scripts = device_monitor.detect_changes()
-       
+            unique_scripts = device_monitor.detect_changes(fh)
 
             if not unique_scripts:
-                    current_time = time.strftime("%H:%M:%S")
-
-                    print(f"Current Time: {current_time}")
-                    #matrix.display_text(matrix_device, current_time)
+                current_time = time.strftime("%H:%M:%S")
+                print(f"Current Time: {current_time}")
             else:
                 for script in unique_scripts:
                     print(script)
-                    time.sleep(5)
-                    # matrix.display_text(matrix_device, script)
 
-            # Pause before the next loop
             time.sleep(1)
+
         except KeyboardInterrupt:
             print("Stopped by user (Ctrl+C)") 
             break

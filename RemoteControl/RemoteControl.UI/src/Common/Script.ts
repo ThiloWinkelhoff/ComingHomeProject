@@ -21,6 +21,9 @@ class Script implements Item {
     this.active = active;
     this.subItems = subItems;
   }
+  getNaming(): string {
+    return this.name;
+  }
 
   // Marking getUnconnected as async to allow the use of await
   async getUnconnected(): Promise<ReducedItem[]> {

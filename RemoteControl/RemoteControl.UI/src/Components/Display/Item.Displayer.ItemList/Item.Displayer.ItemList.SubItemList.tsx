@@ -1,6 +1,6 @@
 import { Button, ListItem, ListItemText } from "@mui/material";
-import Item from "../../Common/Item";
-import deleteIcon from "../../assets/delete_icon.svg";
+import deleteIcon from "../../../assets/delete_icon.svg";
+import Item from "../../../Common/Item";
 
 interface Props {
   item: Item;
@@ -14,7 +14,11 @@ const SubItemList = ({ item, setDeleteTarget, setOpenConfirmation }: Props) => {
       {item.subItems?.map((subItem) => (
         <ListItem
           key={subItem.id}
-          sx={{ display: "flex", justifyContent: "space-around" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            borderBottom: "1px solid white",
+          }}
         >
           <ListItemText>{subItem.name}</ListItemText>
           <Button

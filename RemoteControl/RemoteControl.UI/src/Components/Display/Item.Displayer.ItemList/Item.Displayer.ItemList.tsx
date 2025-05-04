@@ -1,6 +1,6 @@
 import { List } from "@mui/material";
-import Item from "../../Common/Item.ts";
-import ItemCard from "./ItemCard.tsx";
+import ItemCard from "./Item.Displayer.ItemList.Card.tsx";
+import Item from "../../../Common/Item.ts";
 
 interface Props {
   items: Item[];

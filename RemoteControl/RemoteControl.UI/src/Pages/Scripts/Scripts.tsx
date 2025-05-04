@@ -1,5 +1,5 @@
 import fetchScripts from "../../api/Scripts";
-import ItemDisplay from "../../Components/Display/ItemDisplay";
+import ItemDisplay from "../../Components/Display/Item.Displayer";
 
 function Scripts() {
   return (

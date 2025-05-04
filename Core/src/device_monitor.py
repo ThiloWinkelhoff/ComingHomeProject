@@ -1,43 +1,14 @@
-import json
-import os
-from FritzBoxConnection import fetch_connected_devices
-import subprocess
-import device_test
-from database_check_if_connected import is_mac_connected
-from database_add_device import add_device_to_db
-from database_fetch_scripts import fetchScripts
+import time
+from add_device import add_device_to_db
+from check_if_connected import is_mac_connected
+from fetch_scripts import fetchScripts
+from fritz_box_connection import fetch_connected_devices
+from fritzconnection.lib.fritzhosts import FritzHosts
 
-KnownDevices = os.getcwd() + "/devices.json"
- 
-class Device:
-    def __init__(self, name, ip, mac, connected=False, scripts=None):
-        self.name = name
-        self.ip = ip
-        self.mac = mac
-        self.scripts = scripts if scripts is not None else []
-        self.connected = connected  
- 
-    def add_script(self, script):
-        self.scripts.append(script)
- 
-    def to_dict(self):
-        """Convert the Device object to a dictionary."""
-        return {
-            'name': self.name,
-            'ip': self.ip,
-            'mac': self.mac,
-            'scripts': self.scripts,
-            'connected': self.connected
-        }
- 
-    def __str__(self):
-        return f"Device(name={self.name}, ip={self.ip}, mac={self.mac}, scripts={self.scripts}, connected={self.connected})"
- 
- 
-def detect_changes():
+
+def detect_changes(fh: FritzHosts):
     """Detect newly connected and disconnected devices."""
-    # fetched_devices = fetch_connected_devices()
-    fetched_devices = device_test.get_example_devices()
+    fetched_devices = fetch_connected_devices(fh)
 
     scripts = []
     for device in fetched_devices:

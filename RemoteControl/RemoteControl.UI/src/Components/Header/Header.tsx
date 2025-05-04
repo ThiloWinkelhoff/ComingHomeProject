@@ -1,22 +1,12 @@
-import { Box, Button, ListItemText, Typography } from "@mui/material";
+import { Box, Button, ListItemText } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import navItems from "./Navigation";
-import { useState } from "react";
-import Login from "../../Pages/Login/Login";
-import loginIcon from "../../assets/login_icon.svg";
-import logoutIcon from "../../assets/logout_icon.svg";
 function Header() {
   const location = useLocation();
-  const [loggedIn, SetloggedIn] = useState(false);
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   return (
-    <Box
-      display={"flex"}
-      flexDirection={"row-reverse"}
-      justifyContent={"space-between"}
-    >
-      {showLoginPrompt && (
+    <Box display={"flex"} justifyContent={"space-between"}>
+      {/* {showLoginPrompt && (
         <Box
           position="fixed"
           top={0}
@@ -53,7 +43,7 @@ function Header() {
           <img src={logoutIcon} alt="" />
           <Typography>Logout</Typography>
         </Button>
-      )}
+      )} */}
 
       <Box height="100%" display="flex">
         {navItems.map((item) => {

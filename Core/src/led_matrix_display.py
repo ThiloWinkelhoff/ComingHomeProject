@@ -3,7 +3,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
-import ConfigLEDmatrix
+import led_matrix.config_led_matrix as config_led_matrix
 import time
 
 #default displaying of text on matrix
@@ -18,5 +18,5 @@ def demo(device):
     display_text(device, "MAX7219 LED MATRIX Demo")
 
 if __name__ == "__main__":
-    device = ConfigLEDmatrix.initialize_device()
+    device = config_led_matrix.initialize_device()
     demo(device)

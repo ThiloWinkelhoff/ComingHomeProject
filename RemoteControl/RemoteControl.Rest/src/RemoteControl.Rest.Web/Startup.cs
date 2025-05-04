@@ -1,43 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using RemoteControl.Rest.Persistence.Database;
 using RemoteControl.Rest.Web.Extensions;
 
 namespace RemoteControl.Rest.Web;
 
 /// <summary>
-///     Configures the startup settings for the project, specifying how the
-///     application is initialized and configured.
-///     This class is referenced in <see cref="Program" />.
+///     Startup configuring the startup of a project, specified on
+///     <see cref="Program" />
 /// </summary>
 public class Startup
 {
     /// <summary>
-    ///     Gets the configuration settings for the application, such as user secrets
-    ///     and other vital information.
+    ///     Gets the configuration settings for the application.
+    ///     Used to access user secrets and other vital information.
     /// </summary>
     private readonly IConfiguration _configuration;
 
     /// <summary>
-    ///     The environment the application is currently running in (e.g., Development,
-    ///     Production).
+    ///     Environment the application is currently running as.
     /// </summary>
     private readonly IWebHostEnvironment _env;
 
     /// <summary>
-    ///     Name of the CORS policy that is applied to the application.
+    ///     Name of the policy that is added.
     /// </summary>
     private readonly string _policy = "CorsDefaultPolicy";
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="Startup" /> class.
+    ///     Default constructor for <see cref="Startup" />.
     /// </summary>
     /// <param name="configuration">
-    ///     The configuration settings, typically injected via
-    ///     dependency injection.
+    ///     <inheritdoc cref="_configuration" path="/summary" />
     /// </param>
     /// <param name="env">
-    ///     The environment the application is running in (e.g.,
-    ///     Development, Production).
+    ///     <see cref="IWebHostEnvironment" /> the application is
+    ///     currently running in.
     /// </param>
     public Startup(IConfiguration configuration, IWebHostEnvironment env)
     {
@@ -46,95 +44,105 @@ public class Startup
     }
 
     /// <summary>
-    ///     Configures the services required by the application.
-    ///     This method is called by the runtime and used to add necessary services
-    ///     like controllers, logging, authentication, and more.
+    ///     Configures <see cref="IServiceCollection" /> for the rest API.
     /// </summary>
-    /// <param name="services">
-    ///     The <see cref="IServiceCollection" /> that is to be configured. This
-    ///     collection contains all the services
-    ///     the application will use (e.g., database context, authentication services,
-    ///     etc.).
-    /// </param>
+    /// <param name="services"><see cref="IServiceCollection" /> that is to be edited.</param>
     public void ConfigureServices(IServiceCollection services)
     {
-        // Adds logging from the configured provider (e.g., NLog)
+        // Adds Logging from NLog (or any configured provider).
         services.AddLogging();
 
-        // Create a service provider and obtain the logger to log service configurations
+        // Create a logger instance
         using ServiceProvider serviceProvider = services.BuildServiceProvider();
+
         var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
+
         logger.LogInformation("Startup: Configuring services...");
 
-        // Adds the controllers that are used in the API
+        // Adds Logging from NLog.
+        services.AddLogging();
+
+        // Adding the controllers that are used in the API.
         services.AddControllers();
 
-        // Adds support for configuration options
+        // Adding the support of options to the services
         services.AddOptions();
 
-        // Adds Authentication and Authorization services
+        // Adding Authentication and Authorization
         services.AddAuthentication();
         services.AddAuthorization();
 
-        // Adds MediatR configuration for handling requests and responses
+        // Adding MediatR configuration
         services.ConfigureMediatR();
 
         #if DEBUG
-        // Adds Swagger documentation for the application, available only in the DEBUG environment
+        // Adding Swagger Documentation to the application.
         services.AddSwaggerConfiguration();
         #endif
 
-        // Configures CORS policies using the provided settings from the configuration and environment
         services.ConfigureCors(_configuration,
             _env,
             _policy,
             logger);
-
-        // Configures the application database context with the connection string for SQL Server
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(_configuration.GetConnectionString("ComingHomeDatabase")));
     }
 
     /// <summary>
-    ///     Configures the HTTP request pipeline for the application.
-    ///     This method is called by the runtime and is used to configure middleware
-    ///     (e.g., routing, authentication, etc.).
+    ///     Configures <see cref="IApplicationBuilder" /> for the application.
     /// </summary>
     /// <param name="appBuilder">
-    ///     The <see cref="IApplicationBuilder" /> used to configure the application's
-    ///     request pipeline.
-    /// </param>
-    /// <param name="loggerFactory">
-    ///     A factory used to create loggers for the application.
+    ///     <see cref="IApplicationBuilder" /> that is to be
+    ///     configured.
     /// </param>
     public void Configure(IApplicationBuilder appBuilder, ILoggerFactory loggerFactory)
     {
         ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
 
         #if DEBUG
-        // In development environment, enable detailed exception pages and Swagger UI
+        // Enable Swagger and Swagger UI for development environment.
         appBuilder.UseDeveloperExceptionPage();
         appBuilder.ApplySwagger(logger);
         #endif
 
-        // Apply the CORS policy globally
+        List<PhysicalFileProvider> fileProviders = new();
+
+        foreach (string entry in (_configuration.GetValue<string>("wwwroot") ?? "wwwroot").Split('&'))
+        {
+            string wwwroot = Path.IsPathFullyQualified(entry)
+                ? entry
+                : Path.Combine(_env.ContentRootPath,
+                    entry);
+
+            try
+            {
+                fileProviders.Add(new PhysicalFileProvider(wwwroot));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                logger.LogWarning("UI: The specified directory for wwwroot '{Path}' could not be found",
+                    wwwroot);
+            }
+        }
+
         appBuilder.ApplyCors(_policy,
             logger);
 
-        // Set up routing for the application
+        appBuilder.UseFileServer();
         appBuilder.UseRouting();
 
-        // Set up file providers and static file serving
-        appBuilder.UseFileProviders(logger,
-            _configuration,
-            _env);
-        appBuilder.UseDefaultFiles(); // Enable serving of default files (e.g., index.html)
+        // Serve static files from wwwroot
+        appBuilder.UseStaticFiles(new StaticFileOptions { FileProvider = new CompositeFileProvider(fileProviders) });
+        appBuilder.UseDefaultFiles();
 
-        // Add authentication and authorization middleware
+        // Authentication and Authorization
         appBuilder.UseAuthentication();
         appBuilder.UseAuthorization();
 
-        // Map API controllers to routes
-        appBuilder.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        appBuilder.UseEndpoints(endpoints =>
+        {
+            // Map API controllers
+            endpoints.MapControllers();
+        });
     }
 }

@@ -1,8 +1,8 @@
 import { Autocomplete, Button, TextField, Typography } from "@mui/material";
 import { Box, ListItem } from "@mui/material";
 import { useEffect, useState } from "react";
-import Item from "../../Common/Item";
-import ReducedItem from "../../Common/ReducedItem";
+import Item from "../../../Common/Item";
+import ReducedItem from "../../../Common/ReducedItem";
 
 interface AddSubItemInputProps {
   setOpenConfirmation: () => void;
@@ -42,7 +42,8 @@ const AddSubItemInput = ({
   return (
     <ListItem
       sx={{
-        pb: 0,
+        pt: 4,
+        pb: 10,
         height: "48px",
         display: "flex",
         justifyContent: "space-between",
@@ -60,7 +61,6 @@ const AddSubItemInput = ({
           sx={{
             width: "100%",
             color: "white",
-            backgroundColor: "#000000",
           }}
           renderInput={(params) => (
             <TextField

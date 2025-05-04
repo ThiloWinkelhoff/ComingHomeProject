@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Item from "../../Common/Item";
 import ConfirmDeletion from "../../Pages/DeleteConfirmation/DeleteConfirmation";
-import ItemHeader from "./ItemHeader";
-import ItemList from "./ItemList";
+import ItemHeader from "./Item.Displayer.ItemHeader";
+import ItemList from "./Item.Displayer.ItemList/Item.Displayer.ItemList";
 
 interface Props {
   header: string;

@@ -6,9 +6,9 @@ import {
   List,
   ListItemText,
 } from "@mui/material";
-import Item from "../../Common/Item";
-import SubItemList from "./SubItemList.tsx";
-import AddSubItemInput from "./AddSubitemInput.tsx";
+import AddSubItemInput from "./Item.Displayer.ItemList.Card.Addition.tsx";
+import Item from "../../../Common/Item.ts";
+import SubItemList from "./Item.Displayer.ItemList.SubItemList.tsx";
 
 interface Props {
   item: Item;
@@ -32,7 +32,7 @@ const ItemCard = ({
   reload,
 }: Props) => {
   return (
-    <Box sx={{ mb: 1, borderRadius: 1, bgcolor: "#000000", boxShadow: 1 }}>
+    <Box sx={{ mb: 1, borderRadius: 1, bgcolor: "#131212", boxShadow: 1 }}>
       <ListItem
         onClick={() => toggleOpen(item.id)}
         sx={{
@@ -41,13 +41,13 @@ const ItemCard = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          borderBottom: open ? "1px solid #201d1d" : "none",
+          borderBottom: open ? "1px solid #000000" : "none",
         }}
         component="div"
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {/* Icon */}
-          <Typography variant="h5">{item.name}</Typography>
+          <Typography variant="h5">{item.getNaming()}</Typography>
         </Box>
         <Box
           height="100%"
@@ -55,7 +55,9 @@ const ItemCard = ({
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="body2">{item.subItems?.length ?? 0}</Typography>
+          <Typography variant="body2">
+            {subHeader}:{item.subItems?.length ?? 0}
+          </Typography>
         </Box>
       </ListItem>
 

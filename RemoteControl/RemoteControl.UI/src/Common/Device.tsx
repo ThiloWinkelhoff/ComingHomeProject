@@ -27,6 +27,9 @@ class Device implements Item {
     this.active = active;
     this.subItems = subItems;
   }
+  getNaming(): string {
+    return this.name + ":" + this.ip;
+  }
 
   // Marking getUnconnected as async to allow the use of await
   async getUnconnected(): Promise<ReducedItem[]> {

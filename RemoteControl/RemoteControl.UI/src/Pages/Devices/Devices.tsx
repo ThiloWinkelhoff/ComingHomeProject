@@ -1,5 +1,5 @@
 import fetchConnectedDevices from "../../api/devices";
-import ItemDisplay from "../../Components/Display/ItemDisplay";
+import ItemDisplay from "../../Components/Display/Item.Displayer";
 
 function Devices() {
   return (

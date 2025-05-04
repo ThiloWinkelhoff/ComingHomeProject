@@ -8,6 +8,7 @@ interface Item {
   getUnconnected(): Promise<ReducedItem[]>;
   removeSubItem(subItemId: number): Promise<boolean>;
   addSubItem(subItemId: number): Promise<boolean>;
+  getNaming(): string;
 }
 
 export default Item;
