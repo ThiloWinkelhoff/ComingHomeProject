@@ -11,7 +11,7 @@ if __name__ == "__main__":
     start = time.time()
     with open(os.getcwd() + '/secrets.json') as f:
         secrets = json.load(f)
-
+    print(os.getcwd() + '/secrets.json')
     # Step 2: Initialize FritzHosts
     start = time.time()
     fritz_host = secrets['fritz_host']
