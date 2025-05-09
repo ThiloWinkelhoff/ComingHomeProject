@@ -5,15 +5,15 @@ import busio
 import adafruit_st7789
 from PIL import Image, ImageDraw, ImageFont
 
-# Initialisiere SPI1 (GPIO20 = MOSI, GPIO21 = SCLK)
+# Initialisiere SPI1
 spi = busio.SPI(clock=board.SCLK_1, MOSI=board.MOSI_1)
 
 # Steuerleitungen
-cs_pin = digitalio.DigitalInOut(board.D26)     # Chip Select (Pin 25)
-dc_pin = digitalio.DigitalInOut(board.D17)     # Data/Command (Pin 11)
-reset_pin = digitalio.DigitalInOut(board.D27)  # Reset (Pin 13)
+cs_pin = digitalio.DigitalInOut(board.D22)     # GPIO22 (Pin 15)
+dc_pin = digitalio.DigitalInOut(board.D17)     # GPIO17 (Pin 11)
+reset_pin = digitalio.DigitalInOut(board.D27)  # GPIO27 (Pin 13)
 
-# Display initialisieren
+# Display konfigurieren
 disp = adafruit_st7789.ST7789(
     spi,
     cs=cs_pin,
@@ -26,19 +26,16 @@ disp = adafruit_st7789.ST7789(
     y_offset=80
 )
 
-# Bild vorbereiten
+# Leeres Bild erstellen
 image = Image.new("RGB", (240, 240), "black")
 draw = ImageDraw.Draw(image)
 font = ImageFont.load_default()
 
-# Beispielgrafik/Text zeichnen
-draw.rectangle((0, 0, 240, 240), fill=(0, 0, 50))
-draw.text((60, 100), "Hallo, Thilo!", font=font, fill=(255, 255, 0))
-
-# Bild anzeigen
+# Test-Text anzeigen
+draw.text((60, 110), "Display läuft!", font=font, fill=(0, 255, 0))
 disp.image(image)
 
-# Optional: Bild für einige Sekunden anzeigen lassen
+# Optional: 10 Sekunden anzeigen lassen
 time.sleep(10)
 
 # Display löschen (optional)
