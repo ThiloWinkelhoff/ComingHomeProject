@@ -1,11 +1,14 @@
 import time
 import device_monitor
+import requests
 #import ConfigLEDmatrix
 #import led_matrix_display as matrix
 from typing import List
 
 if __name__ == "__main__":
 
+    esp_ip = "http://192.168.1.42"
+    msg = {"msg": "Hallo aus dem Pi!"}
     # Initial detection of devices
     new_devices, disconnected_devices, connected_devices = device_monitor.detect_changes()
 
@@ -26,12 +29,14 @@ if __name__ == "__main__":
         # Collect unique scripts from the connected devices
         unique_scripts = list({script for device in connected_devices for script in device.scripts})
 
+
         if not unique_scripts:
                 current_time = time.strftime("%H:%M:%S")
 
                 print(f"Current Time: {current_time}")
                 #matrix.display_text(matrix_device, current_time)
         else:
+            res = requests.post(f"{esp_ip}/send", data=msg)
             for script in unique_scripts:
                 print(script)
                 # matrix.display_text(matrix_device, script)
