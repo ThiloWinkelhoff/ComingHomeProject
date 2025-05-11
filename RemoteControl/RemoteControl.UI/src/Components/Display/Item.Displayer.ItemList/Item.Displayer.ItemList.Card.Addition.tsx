@@ -3,6 +3,7 @@ import { Box, ListItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import Item from "../../../Common/Item";
 import ReducedItem from "../../../Common/ReducedItem";
+import additionIcon from "../../../assets/add_icon.svg";
 
 interface AddSubItemInputProps {
   setOpenConfirmation: () => void;
@@ -84,14 +85,7 @@ const AddSubItemInput = ({
           p: 0,
         }}
       >
-        <Box
-          component="svg"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 -960 960 960"
-          sx={{ height: "100%", width: "100%", fill: "#e3e3e3" }}
-        >
-          <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-        </Box>
+        <img src={additionIcon} alt="" />
       </Button>
     </ListItem>
   );

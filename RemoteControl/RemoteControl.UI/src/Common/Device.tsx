@@ -28,7 +28,7 @@ class Device implements Item {
     this.subItems = subItems;
   }
   getNaming(): string {
-    return this.name + ":" + this.ip;
+    return this.name;
   }
 
   // Marking getUnconnected as async to allow the use of await
