@@ -1,8 +1,8 @@
 import time
 import device_monitor
 import requests
-#import ConfigLEDmatrix
-#import led_matrix_display as matrix
+import ConfigLEDmatrix
+import led_matrix_display as matrix
 from typing import List
 
 if __name__ == "__main__":
