@@ -3,7 +3,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
-import led_matrix.config_led_matrix as config_led_matrix
+import config_led_matrix
 import time
 
 #default displaying of text on matrix
