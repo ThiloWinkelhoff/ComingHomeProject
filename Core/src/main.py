@@ -3,6 +3,8 @@ import os
 import time
 import device_monitor
 from fritzconnection.lib.fritzhosts import FritzHosts
+import led_matrix_display as matrix
+import config_led_matrix as device
 
 if __name__ == "__main__":
     total_start = time.time()
@@ -18,7 +20,9 @@ if __name__ == "__main__":
     username = secrets['username']
     password = secrets['password']
     fh = FritzHosts(address=fritz_host, user=username, password=password)
+    device.initialize_device()
 
+    matrix.display_text(device, "Running...") 
     while True:
         print("Running...")
 
@@ -28,9 +32,11 @@ if __name__ == "__main__":
             if not unique_scripts:
                 current_time = time.strftime("%H:%M:%S")
                 print(f"Current Time: {current_time}")
+                matrix.display_text(device, current_time) 
             else:
                 for script in unique_scripts:
                     print(script)
+                    matrix.display_text(device, script)
 
             time.sleep(1)
 
