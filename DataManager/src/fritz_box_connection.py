@@ -8,10 +8,7 @@ from fritzconnection.lib.fritzhosts import FritzHosts
 def fetch_connected_devices(fh: FritzHosts):
 
     """Fetch the list of currently connected devices with timing logs."""
-    start = time.time()
     devices_info = fh.get_hosts_info()
-    print(f"get_hosts_info() took {time.time() - start:.2f} seconds")
-    start = time.time()
 
     devices = []
     for device_info in devices_info:
@@ -23,8 +20,6 @@ def fetch_connected_devices(fh: FritzHosts):
                 connected=device_info["status"]
             )
             devices.append(device)
-
-    print(f"get_hosts_info() took {time.time() - start:.2f} seconds")
 
     return devices
 
