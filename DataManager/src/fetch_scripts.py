@@ -1,72 +1,60 @@
 import pyodbc
 
 # Define connection parameters
-server = '[::1]'  # Or the actual IP address of your SQL Server
-database = 'ComingHomeProject'
+server = '[::1]'
+database = 'ComingHomeDatabase'
 username = 'ComingHomeUser'
-password = 'CHU'
+password = 'ComingHomeUser'
 
-# Create the connection string using SQL Server ODBC driver
+# Create the connection string
 connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
 
 
 def fetchScripts(mac):
-    # Establish the connection
+    conn = None
     try:
         conn = pyodbc.connect(connection_string, autocommit=True)
-
         cursor = conn.cursor()
 
-        # Step 1: Check if the device with given MAC is connected (use 'Id' instead of 'DeviceId' for Devices table)
-        cursor.execute("SELECT CONNECTED, Id FROM Devices WHERE MAC = ?", (mac,))
-        rows = cursor.fetchall()
+        # Step 1: Get DeviceId from MAC
+        cursor.execute("SELECT Id FROM Devices WHERE Mac = ?", (mac,))
+        device_row = cursor.fetchone()
+        if not device_row:
+            return []  # No device found for the MAC
+        device_id = device_row[0]
 
-        # List to store script names
-        script_names = []
+        # Step 2: Get ScriptIds from mapping table
+        cursor.execute("SELECT ScriptId FROM DeviceScriptsMappings WHERE DeviceId = ?", (device_id,))
+        script_id_rows = cursor.fetchall()
+        if not script_id_rows:
+            return []  # No scripts mapped
 
-        # Step 2: If device is not connected, get the associated scripts
-        for row in rows:
-            if row[0] == 0:  # Device is not connected (assuming 0 = not connected)
-                cursor.execute("""
-                    SELECT DISTINCT S.ScriptName
-                    FROM Scripts S
-                    JOIN DeviceScriptsMappings DSM ON S.Id = DSM.ScriptId
-                    WHERE DSM.DeviceId = ?
-                """, (row[1],))  # Use 'row[1]' as the Device Id, not DeviceId column
+        script_ids = [row[0] for row in script_id_rows]
 
-                # Fetch scripts and add to list
-                fetched_scripts = cursor.fetchall()
-                if fetched_scripts:
-                    for script in fetched_scripts:
-                        script_names.append(script[0])  # Add only the script name
+        # Step 3: Get script names from Scripts table using IN clause
+        placeholders = ', '.join('?' for _ in script_ids)
+        query = f"SELECT ScriptName FROM Scripts WHERE Id IN ({placeholders})"
+        cursor.execute(query, script_ids)
 
-                # Step 3: Update device status to connected
-                cursor.execute('UPDATE Devices SET Connected = 1 WHERE Id = ?', (row[1],))  # Use 'Id' instead of 'DeviceId'
+        fetched_scripts = cursor.fetchall()
+        script_names = [row[0] for row in fetched_scripts]
 
-        # Return the script names associated with the device
-        if script_names:
-            return script_names
-        return None
-
+        return script_names
 
     except Exception as e:
-        return []  # Return an empty list in case of error
+        print(f"Error: {e}")
+        return []
 
     finally:
         if conn:
             conn.close()
-        else:
-            print("Connection not established.")
+
 
 if __name__ == "__main__":
-    # List of MAC addresses to check
-    macs = ["AA:BB:CC:DD:EE:01", "AA:BB:CC:DD:EE:02"]
     all_scripts = []
-    for mac in macs:
-        fetched = fetchScripts(mac)
-        if fetched:
-            all_scripts.extend(fetched)  # Add the scripts for each MAC address
+    fetched = fetchScripts("34:1C:F0:FF:22:8C")
+    if fetched:
+        all_scripts.extend(fetched)
 
-    # Remove duplicates and print the script names
     unique_scripts = list(set(all_scripts))
     print(unique_scripts)

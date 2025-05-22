@@ -46,7 +46,7 @@ namespace RemoteControl.Rest.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Devices");
+                    b.ToTable("Devices", (string)null);
                 });
 
             modelBuilder.Entity("RemoteControl.Rest.Persistence.Database.Models.DeviceScriptsMapping", b =>
@@ -61,7 +61,7 @@ namespace RemoteControl.Rest.Persistence.Migrations
 
                     b.HasIndex("ScriptId");
 
-                    b.ToTable("DeviceScriptsMappings");
+                    b.ToTable("DeviceScriptsMappings", (string)null);
                 });
 
             modelBuilder.Entity("RemoteControl.Rest.Persistence.Database.Models.Script", b =>
@@ -78,7 +78,7 @@ namespace RemoteControl.Rest.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Scripts");
+                    b.ToTable("Scripts", (string)null);
                 });
 
             modelBuilder.Entity("RemoteControl.Rest.Persistence.Database.Models.DeviceScriptsMapping", b =>

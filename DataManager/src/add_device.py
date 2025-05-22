@@ -5,9 +5,9 @@ from device import Device
     
 # Define connection parameters
 server = '[::1]'  # Or the actual IP address of your SQL Server
-database = 'ComingHomeProject'
+database = 'ComingHomeDatabase'
 username = 'ComingHomeUser'
-password = 'CHU'
+password = 'ComingHomeUser'
 
 # Create the connection string using SQL Server ODBC driver
 connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
@@ -28,7 +28,27 @@ def add_device_to_db(device: Device):
     finally:
         if 'conn' in locals() and conn:
             conn.close()
+            
+def update_device_status(device: Device):
+    try:
+        conn = pyodbc.connect(connection_string, autocommit=True)
+        cursor = conn.cursor()
 
+        status = 0
+        if(device.connected):
+            status = 1
+
+        cursor.execute("""
+            UPDATE Devices SET Connected = ? WHERE Mac = ?
+        """, (status, device.mac))
+        print(device.mac)
+
+    except Exception as e:
+        print(f"Error inserting device: {e}")
+
+    finally:
+        if 'conn' in locals() and conn:
+            conn.close()
             
 if __name__ == "__main__":
     # Sample test device

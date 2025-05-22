@@ -1,26 +1,27 @@
 from flask import Flask, request, jsonify
 import time
 import threading
+# import led_matrix_display as matrix
+# import config_led_matrix as device
 
 app = Flask(__name__)
 
 received_data = []  # Shared global data to hold received input
 
 def run_display_loop():
+    # device.initialize_device()
+    # matrix.display_text(device, "Running...") 
     while True:
         if received_data:
-            print("Received input:")
             for item in received_data:
+                # matrix.display_text(device, item)
                 print(item)
             received_data.clear()  # Clear after displaying once
-        else:
-            current_time = time.strftime("%H:%M:%S")
-            print(f"Current Time: {current_time}")
-        
         time.sleep(1)
 
 @app.route('/input', methods=['POST'])
 def receive_input():
+
     global received_data
     if request.is_json:
         content = request.get_json()
